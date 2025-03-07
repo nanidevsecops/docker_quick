@@ -1,0 +1,31 @@
+docker inspect
+kubectl explain 
+oc describe
+
+
+kubectl api-resources
+kubectl explain pod
+
+
+kubectl label pod mywbserver podnum=two
+kubectl get pods -o wide --show-labels
+kubectl label --overwrite pod mywbserver podnum=twoplus1
+kubectl label pods labelex podnum=twoplus2 --overwrite
+kubectl get pods  --show-labels
+kubectl get pods --selector serial=1
+kubectl get  pods -l serial=1
+kubectl get pods -l 'env in (prod, develop)'
+kubectl delete pods -l 'env in (prod, develop)'
+kubectl get pods -l env!=dev
+kubectl label pod mywbserver podnum-
+
+
+kubectl run nginx --image=nginx --dry-run=client -o yaml
+kubectl label --help
+kubectl delete pods --all
+
+
+
+kubectl get pods configmap-pod -o jsonpath='{.spec.containers[*].name}'
+k run nginx --image=nginx --port=80 --dry-run=client -o yaml
+

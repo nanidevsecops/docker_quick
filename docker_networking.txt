@@ -1,0 +1,78 @@
+  654  docker run -d -p 80:80 httpd
+  655  docker ps
+  656  curl http://localhost:80
+  657  docker inspect 38
+  658  curl http://172.17.0.2
+  659  cd docker/
+  660  ls -ltr
+  661  mkdir httpd
+  662  cd httpd/
+  663  vi Dockerfile
+  664  docker build -t nhttpd .
+  665  docker ps
+  666  docker stop 38
+  667  docker rm 38
+  668  docker images
+  669  docker run -d --name s1 nhttpd
+  670  docker run -d --name s2 nhttpd
+  671  docker ps
+  672  curl http://localhost:80
+  673  docker inspect s1
+  674  docker inspect s2
+  675  docker network ls
+  676  docker network bridge
+  677  docker network inspect bridge
+  678  docker exec -it s1 bash
+  679  docker exec -it s2 bash
+  680  docker network l
+  681  docker network ls
+  682  docker network create backend --subnet 10.0.0.0/24
+  683  docker network ls
+  684  docker network inspect backend
+  685  docker network ls
+  686  docker network connect backend s1
+  687  docker network connect backend s2
+  688  docker network inspect backend
+  689  docker container inspect s1
+  690  docker network disconnect bridge s1
+  691  docker network disconnect bridge s2
+  692  docker container inspect s1
+  693  docker network inspect backend
+  694  docker exec -it s1 bash
+  695  docker networks ls
+  696  docker network ls
+  697  docker network create frontend --subnet 10.0.1.0/24
+  698  docker network disconnect backend s2
+  699  docker network connect frontend s2
+  700  docker network inspect s2
+  701  docker  inspect s2
+  702  docker network inspect frontend
+  703  docker exec -it s1 bash
+  704  docker exec -it s2 bash
+  705  docker run -d --name gw --network backend -d nhttpd
+  706  docker network connect frontend gw
+  707  docker inspect gw
+  708  docker exec -it s1 bash
+  709  docker exec -it gw bash
+  710  docker exec -it s1 bash
+  711  docker exec -it s2 bash
+  712  docker stop s1
+  713  docker stop s2
+  714  docker rm s1 s2
+  715  docker run -d --name s1 --network backend --cap-add=NET_ADMIN nhttpd
+  716  docker run -d --name s2 --network frontend --cap-add=NET_ADMIN nhttpd
+  717  docker ps
+  718  docker exec -it s1 bash
+  719  docker exec -it s2 bash
+  720  docker exec -it s1 bash
+  721  docker exec -it s2 bash
+  722  docker ps
+  723  docker networks ls
+  724  docker network ls
+  725  docker network inspect frontend
+  726  docker network inspect backend
+  727  docker ps
+  728  docker inspect s1
+  729  docker inspect s2
+  730  docker inspect gw
+  731  history

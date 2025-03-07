@@ -1,0 +1,2511 @@
+route -n
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED       STATUS       PORTS                                       NAMES
+0d4c820c139b   8060d5a2fb4c   "python3 manage.py r…"   7 hours ago   Up 7 hours   0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   trusting_heisenberg
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+cherryniks@CherryNiks:~$ docker volume create nani
+nani
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+local     nani
+cherryniks@CherryNiks:~$ docker volume inspect nani
+[
+    {
+        "CreatedAt": "2024-07-27T10:40:39Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nani/_data",
+        "Name": "nani",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+cherryniks@CherryNiks:~$ docker volume rm nani
+nani
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+cherryniks@CherryNiks:~$
+
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS                     PORTS                                       NAMES
+0d4c820c139b   8060d5a2fb4c   "python3 manage.py r…"   27 hours ago   Exited (255) 3 hours ago   0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   trusting_heisenberg
+2928b743dade   8060d5a2fb4c   "python3 manage.py r…"   27 hours ago   Exited (0) 27 hours ago                                                musing_stonebraker
+059436842d50   8060d5a2fb4c   "python3 manage.py r…"   27 hours ago   Exited (0) 27 hours ago                                                friendly_kepler
+2aa07ef15793   d2c94e258dcb   "bash"                   27 hours ago   Created                                                                recursing_heisenberg
+7125d5a465a6   d2c94e258dcb   "/hello"                 27 hours ago   Exited (0) 27 hours ago                                                eloquent_bohr
+492cb96e8c73   hello-world    "/hello"                 38 hours ago   Exited (0) 38 hours ago                                                amazing_ellis
+3fba78230cb2   hello-world    "/hello"                 38 hours ago   Exited (0) 38 hours ago                                                clever_buck
+cherryniks@CherryNiks:~$ docker rm 3fba78230cb2
+3fba78230cb2
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS                     PORTS                                       NAMES
+0d4c820c139b   8060d5a2fb4c   "python3 manage.py r…"   27 hours ago   Exited (255) 3 hours ago   0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   trusting_heisenberg
+2928b743dade   8060d5a2fb4c   "python3 manage.py r…"   27 hours ago   Exited (0) 27 hours ago                                                musing_stonebraker
+059436842d50   8060d5a2fb4c   "python3 manage.py r…"   27 hours ago   Exited (0) 27 hours ago                                                friendly_kepler
+2aa07ef15793   d2c94e258dcb   "bash"                   27 hours ago   Created                                                                recursing_heisenberg
+7125d5a465a6   d2c94e258dcb   "/hello"                 27 hours ago   Exited (0) 27 hours ago                                                eloquent_bohr
+492cb96e8c73   hello-world    "/hello"                 38 hours ago   Exited (0) 38 hours ago                                                amazing_ellis
+cherryniks@CherryNiks:~$ docker ps -a -s -q
+0d4c820c139b
+2928b743dade
+059436842d50
+2aa07ef15793
+7125d5a465a6
+492cb96e8c73
+cherryniks@CherryNiks:~$ docker rm $(docker ps -a -s -q)
+0d4c820c139b
+2928b743dade
+059436842d50
+2aa07ef15793
+7125d5a465a6
+492cb96e8c73
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$
+
+docker start $(docker ps -a -q)
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+
+
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+cherryniks@CherryNiks:~$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+b01af8c904db   bridge    bridge    local
+a519a60f0629   host      host      local
+077d31baff5b   none      null      local
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED             STATUS             PORTS     NAMES
+f4f08a806652   nginx:latest   "/docker-entrypoint.…"   About an hour ago   Up About an hour   80/tcp    firstcontiner
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker stop f4f08a806652
+f4f08a806652
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker-clean -s
+Stopping running containers...
+Containers stopped: 1
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS                     PORTS     NAMES
+d6be9d2dcbff   nginx:latest   "/docker-entrypoint.…"   33 seconds ago   Exited (0) 5 seconds ago             first
+f4f08a806652   nginx:latest   "/docker-entrypoint.…"   2 hours ago      Exited (0) 4 minutes ago             firstcontiner
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker-clean --n
+
+  Docker Clean Usage Options:
+-------------------------------
+
+-h or --help        Opens this help menu
+-v or --version     Prints the current docker-clean version
+
+ Running without any options will remove dangling volumes and untagged images only.
+ All of the options are option, and while they overlap they can all be run concurrently.
+ NOTE: By default, created containers will always be included, see -d, --created.
+
+stop         Stops and removes all containers, cleans dangling volumes, and networks
+
+images       Removes all tagged and untagged images, stopped containers,
+             dangling volumes, and networks
+
+run          Removes all stopped containers, untagged images, dangling volumes, and networks
+
+all          Stops and removes all containers, images, volumes and networks
+
+Additional Flag options:
+
+-H   or --host        Specifies the docker host to run against
+                      Useful for docker swarm maintenance
+                      ie: -H 127.0.0.1:4000
+
+-n   or --dry-run     Adding this additional flag will list items to be
+                      removed without executing any stopping or removing commands
+
+-s   or --stop        Stops all running containers
+
+-c   or --containers  Removes all stopped containers
+
+-i   or --images      Removes all untagged images
+
+-net or --networks    Removes all empty Networks (all network cleans are only empty)
+
+-r   or --restart     Restarts the docker machine/daemon
+
+-d   or --created     By default, CREATED containers are set to be removed.  Adding this
+                      flag will ensure that all created containers are not cleaned
+
+-t   or --tagged      Removes all tagged images
+
+-a   or --all         Stops and removes all Containers, Images, AND Restarts docker
+
+-l   or --log         Adding this as an additional flag will list all
+                      image, volume, and container deleting output
+cherryniks@CherryNiks:~$ docker-clean --help
+Dry run on removal of images:
+Running without -n or --dry-run flag will remove the listed images:
+
+REPOSITORY/TAG: [] IMAGE ID: 8060d5a2fb4c
+You've cleared approximately MB: 594 of space!
+
+Dry run on removal of dangling volumes:
+No existing dangling volumes. Running without -n or --dry-run flag won't remove any dangling volumes.
+
+Dangling volumes that would be removed from containers to be deleted...
+VOLUME: []
+
+VOLUME: []
+
+
+Dry run on removal of networks:
+No empty networks. Running without -n or --dry-run flag won't remove any networks.
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+<none>        <none>    8060d5a2fb4c   29 hours ago    595MB
+nginx         latest    a72860cb95fd   5 weeks ago     188MB
+hello-world   latest    d2c94e258dcb   15 months ago   13.3kB
+cherryniks@CherryNiks:~$
+
+
+cherryniks@CherryNiks:~$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+b01af8c904db   bridge    bridge    local
+a519a60f0629   host      host      local
+077d31baff5b   none      null      local
+cherryniks@CherryNiks:~$ docker-clean run
+Cleaning containers...
+Stopped containers cleaned: 2
+Cleaning images...
+Images cleaned: 1
+You've cleared approximately MB: 594 of space!
+No dangling volumes!
+No empty networks!
+
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker run -d --name first nginx:latest
+379f3c87a819118706ede517e0894073c2033a8ab06c0d58219e3171117efd7e
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+379f3c87a819   nginx:latest   "/docker-entrypoint.…"   3 seconds ago   Up 2 seconds   80/tcp    first
+cherryniks@CherryNiks:~$ docker-clean -a
+Stopping running containers...
+Containers stopped: 1
+Cleaning containers...
+Stopped containers cleaned: 1
+Cleaning images...
+Images cleaned: 2
+You've cleared approximately MB: 187 of space!
+No dangling volumes!
+No empty networks!
+
+Restarting Docker...
+Restarting this service requires sudo privileges
+[sudo] password for cherryniks:
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+cherryniks@CherryNiks:~$
+
+docker-compose
+docker-init
+
+dockerd ==> A self-sufficient runtime for containers
+
+
+
+root@CherryNiks:/tmp/dockervol# docker volume create nanivol
+nanivol
+root@CherryNiks:/tmp/dockervol# docker volume ls
+DRIVER    VOLUME NAME
+local     nanivol
+root@CherryNiks:/tmp/dockervol# docker volume inspect nanivol
+[
+    {
+        "CreatedAt": "2024-07-28T12:05:54Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nanivol/_data",
+        "Name": "nanivol",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+root@CherryNiks:/tmp/dockervol#
+
+cherryniks@CherryNiks:~$ docker run -d --name cnt1 -v nanivol:/tmp nginx:latest
+f98bddc2c9b028567d2bfcd6385b9988f2989473924921bcd6ff8f25095756d1
+cherryniks@CherryNiks:~$
+
+root@CherryNiks:/tmp/dockervol# docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+f98bddc2c9b0   nginx:latest   "/docker-entrypoint.…"   13 seconds ago   Up 12 seconds   80/tcp    cnt1
+root@CherryNiks:/tmp/dockervol#
+root@CherryNiks:/tmp/dockervol# docker exec -it f98b sh
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay        1007G  3.4G  953G   1% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+shm              64M     0   64M   0% /dev/shm
+/dev/sdc       1007G  3.4G  953G   1% /tmp
+tmpfs           3.9G     0  3.9G   0% /proc/acpi
+tmpfs           3.9G     0  3.9G   0% /proc/scsi
+tmpfs           3.9G     0  3.9G   0% /sys/firmware
+# cd /tmp
+# touch abc.txt
+# ls -ltr
+total 0
+-rw-r--r-- 1 root root 0 Jul 28 12:12 abc.txt
+#
+root@CherryNiks:/tmp/dockervol# docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED              STATUS          PORTS     NAMES
+f98bddc2c9b0   nginx:latest   "/docker-entrypoint.…"   About a minute ago   Up 59 seconds   80/tcp    cnt1
+root@CherryNiks:/tmp/dockervol#
+root@CherryNiks:/tmp/dockervol# docker volume ls
+DRIVER    VOLUME NAME
+local     nanivol
+root@CherryNiks:/tmp/dockervol# docker volume inspect nanivol
+[
+    {
+        "CreatedAt": "2024-07-28T12:05:54Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nanivol/_data",
+        "Name": "nanivol",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+root@CherryNiks:/tmp/dockervol# cd /var/lib/docker/volumes/nanivol/_data
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls
+abc.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# touch def.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# docker exec -it f98b sh
+# cd /tmp
+# ls -ltr
+total 0
+-rw-r--r-- 1 root root 0 Jul 28 12:12 abc.txt
+-rw-r--r-- 1 root root 0 Jul 28 12:13 def.txt
+#
+
+cherryniks@CherryNiks:~$ docker stop f98b
+f98b
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS                     PORTS     NAMES
+f98bddc2c9b0   nginx:latest   "/docker-entrypoint.…"   6 minutes ago   Exited (0) 2 minutes ago             cnt1
+cherryniks@CherryNiks:~$ docker rm f98b
+f98b
+cherryniks@CherryNiks:~$ date
+Sun Jul 28 12:18:57 UTC 2024
+
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls
+abc.txt  def.txt
+
+==> after removal of container data at host
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# date
+Sun Jul 28 12:18:31 UTC 2024
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls
+abc.txt  def.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data#
+
+After removal of vol:
+
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+local     nanivol
+cherryniks@CherryNiks:~$ docker volume rm nanivol
+nanivol
+cherryniks@CherryNiks:~$
+
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data#
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# cd ..
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data/..#
+
+=====> Testing --mount <=====
+
+* No need to create vol before --mount,it creates automatically
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+cherryniks@CherryNiks:~$ docker run -d --name cnt1 --mount source=nanivol,target=/tmp nginx:latest
+88a3190d770b35360b37472837a36ebe28f33323c43517746053c91e7c058d88
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+local     nanivol
+cherryniks@CherryNiks:~$ docker volume inspect nanivol
+[
+    {
+        "CreatedAt": "2024-07-28T12:33:37Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nanivol/_data",
+        "Name": "nanivol",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+cherryniks@CherryNiks:~$ sudo su -
+[sudo] password for cherryniks:
+Sorry, try again.
+[sudo] password for cherryniks:
+root@CherryNiks:~# cd /var/lib/docker/volumes/nanivol/_data
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls -ltr
+total 0
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# touch abcdef.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# echo "Hello" > ghijkl.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls -ltr
+total 4
+-rw-r--r-- 1 root root 0 Jul 28 12:35 abcdef.txt
+-rw-r--r-- 1 root root 6 Jul 28 12:35 ghijkl.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data#
+logout
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED              STATUS              PORTS     NAMES
+88a3190d770b   nginx:latest   "/docker-entrypoint.…"   About a minute ago   Up About a minute   80/tcp    cnt1
+cherryniks@CherryNiks:~$ docker exec -it 88a3 sh
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay        1007G  3.4G  953G   1% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+shm              64M     0   64M   0% /dev/shm
+/dev/sdc       1007G  3.4G  953G   1% /tmp
+tmpfs           3.9G     0  3.9G   0% /proc/acpi
+tmpfs           3.9G     0  3.9G   0% /proc/scsi
+tmpfs           3.9G     0  3.9G   0% /sys/firmware
+# cd /tmp
+# ls -ltr
+total 4
+-rw-r--r-- 1 root root 0 Jul 28 12:35 abcdef.txt
+-rw-r--r-- 1 root root 6 Jul 28 12:35 ghijkl.txt
+# echo "Hi" > mko09ijn.txt
+#
+cherryniks@CherryNiks:~$ sudo su -
+root@CherryNiks:~# cd /var/lib/docker/volumes/nanivol/_data
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls -ltr
+total 8
+-rw-r--r-- 1 root root 0 Jul 28 12:35 abcdef.txt
+-rw-r--r-- 1 root root 6 Jul 28 12:35 ghijkl.txt
+-rw-r--r-- 1 root root 3 Jul 28 12:36 mko09ijn.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data#
+logout
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+88a3190d770b   nginx:latest   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   80/tcp    cnt1
+cherryniks@CherryNiks:~$ docker stop 88a3
+88a3
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS                     PORTS     NAMES
+88a3190d770b   nginx:latest   "/docker-entrypoint.…"   3 minutes ago   Exited (0) 7 seconds ago             cnt1
+cherryniks@CherryNiks:~$ docker rm 88a3
+88a3
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$ sudo su -
+root@CherryNiks:~# cd /var/lib/docker/volumes/nanivol/_data
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data# ls -ltr
+total 8
+-rw-r--r-- 1 root root 0 Jul 28 12:35 abcdef.txt
+-rw-r--r-- 1 root root 6 Jul 28 12:35 ghijkl.txt
+-rw-r--r-- 1 root root 3 Jul 28 12:36 mko09ijn.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol/_data#
+logout
+cherryniks@CherryNiks:~$
+
+-----
+
+<<<=============== Test with -v <hostmnt>:<cntmnt>    ====================>
+same as --mount , no need to create volume before mount 
+
+cherryniks@CherryNiks:~$ docker run -d --name cnt1 -v nanivol1:/tmp nginx:latest
+e03b86f7d730ab11f60abd0b96fd38cbb87a378e43f248f63076eaa8e0553f58
+cherryniks@CherryNiks:~$ docker volume ls
+DRIVER    VOLUME NAME
+local     nanivol1
+cherryniks@CherryNiks:~$ docker volume inspect nanivol1
+[
+    {
+        "CreatedAt": "2024-07-28T12:39:20Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nanivol1/_data",
+        "Name": "nanivol1",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+e03b86f7d730   nginx:latest   "/docker-entrypoint.…"   54 seconds ago   Up 53 seconds   80/tcp    cnt1
+cherryniks@CherryNiks:~$ docker exec -it e03b sh
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay        1007G  3.4G  953G   1% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+shm              64M     0   64M   0% /dev/shm
+/dev/sdc       1007G  3.4G  953G   1% /tmp
+tmpfs           3.9G     0  3.9G   0% /proc/acpi
+tmpfs           3.9G     0  3.9G   0% /proc/scsi
+tmpfs           3.9G     0  3.9G   0% /sys/firmware
+# cd /tmp
+# ls -ltr
+total 0
+#
+#
+# touch abcde.txt
+# ls -ltr
+total 0
+-rw-r--r-- 1 root root 0 Jul 28 12:40 abcde.txt
+#
+cherryniks@CherryNiks:~$ sudo su -
+root@CherryNiks:~# cd /var/lib/docker/volumes/nanivol/_data
+-bash: cd: /var/lib/docker/volumes/nanivol/_data: No such file or directory
+root@CherryNiks:~# cd /var/lib/docker/volumes/nanivol1/_data
+root@CherryNiks:/var/lib/docker/volumes/nanivol1/_data# ls -ltr
+total 0
+-rw-r--r-- 1 root root 0 Jul 28 12:40 abcde.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol1/_data# touch defghi.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol1/_data#
+logout
+cherryniks@CherryNiks:~$ docker exec -it e03b sh
+# cd /tmp
+# ls -ltr
+total 0
+-rw-r--r-- 1 root root 0 Jul 28 12:40 abcde.txt
+-rw-r--r-- 1 root root 0 Jul 28 12:41 defghi.txt
+#
+cherryniks@CherryNiks:/tmp$ docker volume ls
+DRIVER    VOLUME NAME
+local     nanivol1
+cherryniks@CherryNiks:/tmp$ docker volume inspect nanivol1
+[
+    {
+        "CreatedAt": "2024-07-28T12:39:20Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nanivol1/_data",
+        "Name": "nanivol1",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+cherryniks@CherryNiks:/tmp$ sudo su -
+[sudo] password for cherryniks:
+root@CherryNiks:~# cd /var/lib/docker/volumes/nanivol1/_data
+root@CherryNiks:/var/lib/docker/volumes/nanivol1/_data# ls -ltr
+total 0
+-rw-r--r-- 1 root root 0 Jul 28 12:40 abcde.txt
+-rw-r--r-- 1 root root 0 Jul 28 12:41 defghi.txt
+root@CherryNiks:/var/lib/docker/volumes/nanivol1/_data#
+
+cherryniks@CherryNiks:/tmp$ docker inspect e03b | grep -A 10 "Mounts"
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "nanivol1",
+                "Source": "/var/lib/docker/volumes/nanivol1/_data",
+                "Destination": "/tmp",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+
+
+
+-----
+cherryniks@CherryNiks:~$ docker run -d --name login nginx:latest
+77accce3f631814377c270ca6835aec9350d3065d596589e9efe19bd5be05e70
+cherryniks@CherryNiks:~$ docker run -d --name logout nginx:latest
+96ac4b93f87e81503031a5d9d23a5f6005485d04815107d2416387b1abf52ba0
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   4 seconds ago    Up 3 seconds    80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   11 seconds ago   Up 10 seconds   80/tcp    login
+e03b86f7d730   nginx:latest   "/docker-entrypoint.…"   56 minutes ago   Up 56 minutes   80/tcp    cnt1
+cherryniks@CherryNiks:~$ docker stop e03b
+e03b
+cherryniks@CherryNiks:~$ docker rm e03b
+e03b
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   31 seconds ago   Up 29 seconds   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   38 seconds ago   Up 37 seconds   80/tcp    login
+cherryniks@CherryNiks:~$ docker exec -it 77ac sh
+# apt update
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8788 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [13.8 kB]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [169 kB]
+Fetched 9225 kB in 2s (4757 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+# apt-get install iputils-ping
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libcap2-bin libpam-cap
+The following NEW packages will be installed:
+  iputils-ping libcap2-bin libpam-cap
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 96.2 kB of archives.
+After this operation, 311 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://deb.debian.org/debian bookworm/main amd64 libcap2-bin amd64 1:2.66-4 [34.7 kB]
+Get:2 http://deb.debian.org/debian bookworm/main amd64 iputils-ping amd64 3:20221126-1 [47.1 kB]
+Get:3 http://deb.debian.org/debian bookworm/main amd64 libpam-cap amd64 1:2.66-4 [14.5 kB]
+Fetched 96.2 kB in 0s (864 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package libcap2-bin.
+(Reading database ... 7581 files and directories currently installed.)
+Preparing to unpack .../libcap2-bin_1%3a2.66-4_amd64.deb ...
+Unpacking libcap2-bin (1:2.66-4) ...
+Selecting previously unselected package iputils-ping.
+Preparing to unpack .../iputils-ping_3%3a20221126-1_amd64.deb ...
+Unpacking iputils-ping (3:20221126-1) ...
+Selecting previously unselected package libpam-cap:amd64.
+Preparing to unpack .../libpam-cap_1%3a2.66-4_amd64.deb ...
+Unpacking libpam-cap:amd64 (1:2.66-4) ...
+Setting up libcap2-bin (1:2.66-4) ...
+Setting up libpam-cap:amd64 (1:2.66-4) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 78.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.36.0 /usr/local/share/perl/5.36.0 /usr/lib/x86_64-linux-gnu/perl5/5.36 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.36 /usr/share/perl/5.36 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+debconf: falling back to frontend: Teletype
+Setting up iputils-ping (3:20221126-1) ...
+# ping -V
+ping from iputils 20221126
+libcap: yes, IDN: yes, NLS: no, error.h: yes, getrandom(): yes, __fpending(): yes
+#
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   80/tcp    login
+cherryniks@CherryNiks:~$ docker exec -it 96ac sh
+# apt update
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8788 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [13.8 kB]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [169 kB]
+Fetched 9225 kB in 2s (4883 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+# apt-get install iputils-ping
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libcap2-bin libpam-cap
+The following NEW packages will be installed:
+  iputils-ping libcap2-bin libpam-cap
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 96.2 kB of archives.
+After this operation, 311 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://deb.debian.org/debian bookworm/main amd64 libcap2-bin amd64 1:2.66-4 [34.7 kB]
+Get:2 http://deb.debian.org/debian bookworm/main amd64 iputils-ping amd64 3:20221126-1 [47.1 kB]
+Get:3 http://deb.debian.org/debian bookworm/main amd64 libpam-cap amd64 1:2.66-4 [14.5 kB]
+Fetched 96.2 kB in 0s (749 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package libcap2-bin.
+(Reading database ... 7581 files and directories currently installed.)
+Preparing to unpack .../libcap2-bin_1%3a2.66-4_amd64.deb ...
+Unpacking libcap2-bin (1:2.66-4) ...
+Selecting previously unselected package iputils-ping.
+Preparing to unpack .../iputils-ping_3%3a20221126-1_amd64.deb ...
+Unpacking iputils-ping (3:20221126-1) ...
+Selecting previously unselected package libpam-cap:amd64.
+Preparing to unpack .../libpam-cap_1%3a2.66-4_amd64.deb ...
+Unpacking libpam-cap:amd64 (1:2.66-4) ...
+Setting up libcap2-bin (1:2.66-4) ...
+Setting up libpam-cap:amd64 (1:2.66-4) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 78.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.36.0 /usr/local/share/perl/5.36.0 /usr/lib/x86_64-linux-gnu/perl5/5.36 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.36 /usr/share/perl/5.36 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+debconf: falling back to frontend: Teletype
+Setting up iputils-ping (3:20221126-1) ...
+#
+#
+# ifconfig
+sh: 5: ifconfig: not found
+#
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   4 minutes ago   Up 4 minutes   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   4 minutes ago   Up 4 minutes   80/tcp    login
+cherryniks@CherryNiks:~$
+
+docker inspect login
+IPAddress": "172.17.0.3"
+
+docker inspect logout
+IPAddress": "172.17.0.4"
+
+cherryniks@CherryNiks:~$ ifconfig
+docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+        inet6 fe80::42:16ff:feb0:285d  prefixlen 64  scopeid 0x20<link>
+        ether 02:42:16:b0:28:5d  txqueuelen 0  (Ethernet)
+        RX packets 1302  bytes 70892 (70.8 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 2579  bytes 18825318 (18.8 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   6 minutes ago   Up 6 minutes   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   6 minutes ago   Up 6 minutes   80/tcp    login
+cherryniks@CherryNiks:~$ docker exec -it 96ac sh
+# ping 172.17.0.4
+PING 172.17.0.4 (172.17.0.4) 56(84) bytes of data.
+64 bytes from 172.17.0.4: icmp_seq=1 ttl=64 time=0.042 ms
+64 bytes from 172.17.0.4: icmp_seq=2 ttl=64 time=0.106 ms
+64 bytes from 172.17.0.4: icmp_seq=3 ttl=64 time=0.086 ms
+^C
+--- 172.17.0.4 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2138ms
+rtt min/avg/max/mdev = 0.042/0.078/0.106/0.026 ms
+#
+cherryniks@CherryNiks:~$ docker exec -it 77ac sh
+# ping 172.17.0.4
+PING 172.17.0.4 (172.17.0.4) 56(84) bytes of data.
+64 bytes from 172.17.0.4: icmp_seq=1 ttl=64 time=0.081 ms
+64 bytes from 172.17.0.4: icmp_seq=2 ttl=64 time=0.242 ms
+^C
+--- 172.17.0.4 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1049ms
+rtt min/avg/max/mdev = 0.081/0.161/0.242/0.080 ms
+# ping 172.17.0.3
+PING 172.17.0.3 (172.17.0.3) 56(84) bytes of data.
+64 bytes from 172.17.0.3: icmp_seq=1 ttl=64 time=0.043 ms
+64 bytes from 172.17.0.3: icmp_seq=2 ttl=64 time=0.080 ms
+^C
+--- 172.17.0.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1140ms
+rtt min/avg/max/mdev = 0.043/0.061/0.080/0.018 ms
+#
+cherryniks@CherryNiks:~$
+
+
+cherryniks@CherryNiks:~$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+24731c17b22d   bridge    bridge    local
+a519a60f0629   host      host      local
+077d31baff5b   none      null      local
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker network create secure-network
+c7981ae90799e64e6367cec4877de25bdfaae83bd1011be58ccae16ec4f31a7f
+cherryniks@CherryNiks:~$ docker network ls
+NETWORK ID     NAME             DRIVER    SCOPE
+24731c17b22d   bridge           bridge    local
+a519a60f0629   host             host      local
+077d31baff5b   none             null      local
+c7981ae90799   secure-network   bridge    local
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker run -d --name finance --network secure-network nginx:latest
+7b0d88d7b11e921884d4baeb32274eef7a3610925d9485a02a53d92656c0d3ce
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+7b0d88d7b11e   nginx:latest   "/docker-entrypoint.…"   6 seconds ago    Up 5 seconds    80/tcp    finance
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   14 minutes ago   Up 14 minutes   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   14 minutes ago   Up 14 minutes   80/tcp    login
+cherryniks@CherryNiks:~$ docker exec -it 7b0d sh
+# ping 172.17.0.4
+sh: 1: ping: not found
+# apt update
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8788 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [13.8 kB]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [169 kB]
+Fetched 9225 kB in 2s (4849 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+# apt-get install iputils-ping
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libcap2-bin libpam-cap
+The following NEW packages will be installed:
+  iputils-ping libcap2-bin libpam-cap
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 96.2 kB of archives.
+After this operation, 311 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://deb.debian.org/debian bookworm/main amd64 libcap2-bin amd64 1:2.66-4 [34.7 kB]
+Get:2 http://deb.debian.org/debian bookworm/main amd64 iputils-ping amd64 3:20221126-1 [47.1 kB]
+Get:3 http://deb.debian.org/debian bookworm/main amd64 libpam-cap amd64 1:2.66-4 [14.5 kB]
+Fetched 96.2 kB in 0s (681 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package libcap2-bin.
+(Reading database ... 7581 files and directories currently installed.)
+Preparing to unpack .../libcap2-bin_1%3a2.66-4_amd64.deb ...
+Unpacking libcap2-bin (1:2.66-4) ...
+Selecting previously unselected package iputils-ping.
+Preparing to unpack .../iputils-ping_3%3a20221126-1_amd64.deb ...
+Unpacking iputils-ping (3:20221126-1) ...
+Selecting previously unselected package libpam-cap:amd64.
+Preparing to unpack .../libpam-cap_1%3a2.66-4_amd64.deb ...
+Unpacking libpam-cap:amd64 (1:2.66-4) ...
+Setting up libcap2-bin (1:2.66-4) ...
+Setting up libpam-cap:amd64 (1:2.66-4) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 78.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.36.0 /usr/local/share/perl/5.36.0 /usr/lib/x86_64-linux-gnu/perl5/5.36 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.36 /usr/share/perl/5.36 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+debconf: falling back to frontend: Teletype
+Setting up iputils-ping (3:20221126-1) ...
+# ping 172.17.0.4
+PING 172.17.0.4 (172.17.0.4) 56(84) bytes of data.
+^C
+--- 172.17.0.4 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2122ms
+
+# ping 172.17.0.3
+PING 172.17.0.3 (172.17.0.3) 56(84) bytes of data.
+^C
+--- 172.17.0.3 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2115ms
+
+#
+
+
+"Networks": {
+                "secure-network": {
+"IPAddress": "172.18.0.2",
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+7b0d88d7b11e   nginx:latest   "/docker-entrypoint.…"   4 minutes ago    Up 4 minutes    80/tcp    finance
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   18 minutes ago   Up 18 minutes   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   19 minutes ago   Up 19 minutes   80/tcp    login
+
+cherryniks@CherryNiks:~$ docker exec -it 77ac sh
+# ping 172.18.0.2
+PING 172.18.0.2 (172.18.0.2) 56(84) bytes of data.
+^C
+--- 172.18.0.2 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2124ms
+
+#
+
+
+----------
+
+Testing host network type demo
+cherryniks@CherryNiks:~$ docker run -d --name host-network-demo --network host nginx:latest
+b8cc7c5f2f30b8fa5f11b12531839ddd63019312e3f86539136b2408066ca1eb
+cherryniks@CherryNiks:~$ docker network ls
+NETWORK ID     NAME             DRIVER    SCOPE
+24731c17b22d   bridge           bridge    local
+a519a60f0629   host             host      local
+077d31baff5b   none             null      local
+c7981ae90799   secure-network   bridge    local
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+b8cc7c5f2f30   nginx:latest   "/docker-entrypoint.…"   16 seconds ago   Up 15 seconds             host-network-demo
+7b0d88d7b11e   nginx:latest   "/docker-entrypoint.…"   9 minutes ago    Up 9 minutes    80/tcp    finance
+96ac4b93f87e   nginx:latest   "/docker-entrypoint.…"   23 minutes ago   Up 23 minutes   80/tcp    logout
+77accce3f631   nginx:latest   "/docker-entrypoint.…"   23 minutes ago   Up 23 minutes   80/tcp    login
+c
+
+docker inspect b8cc
+
+ "Networks": {
+                "host": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "a519a60f0629d148ec0db0d4d5faf9ce6fa4a443003530630e538a40ab985833",
+                    "EndpointID": "f021f73fd7aa234cc4a64261e461039f6612c89495e89ed301b17aa6ef6b817e",
+                    "Gateway": "",
+                    "IPAddress": "",
+
+
+
+
+PS C:\Users\lenovo\simple-python-app> docker init       
+
+? What application platform does your project use?  [Use arrows to move, type to filter]
+> Python - (detected) suitable for a Python server application
+  Go - suitable for a Go server application    
+  Node - suitable for a Node server application
+  Rust - suitable for a Rust server application
+  ASP.NET Core - suitable for an ASP.NET Core application
+  PHP with Apache - suitable for a PHP web application   
+  Java - suitable for a Java application that uses Maven and packages as an uber jar
+  Other - general purpose starting point for containerizing your application
+  Don't see something you need? Let us know!
+  Quit
+? What application platform does your project use? Python
+? What version of Python do you want to use? 3.10.0
+? What version of Python do you want to use? 3.10.0
+? What port do you want your app to listen on? (8000) 
+
+? What port do you want your app to listen on? 8000   
+? What is the command you use to run your app? (gunicorn 'app:app' --bind=0.0.0.0:8000) python3 app.py
+
+? What is the command you use to run your app? python3 app.py
+
+✔ Created → .dockerignore
+✔ Created → Dockerfile
+✔ Created → compose.yaml
+✔ Created → README.Docker.md
+
+→ Your Docker files are ready!
+  Review your Docker files and tailor them to your application.
+  Consult README.Docker.md for information about using the generated files.
+
+What's next?
+  Start your application by running → docker compose up --build
+  Your application will be available at http://localhost:8000
+PS C:\Users\lenovo\simple-python-app> ls   
+
+
+    Directory: C:\Users\lenovo\simple-python-app
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        28-07-2024     20:31            629 .dockerignore
+-a----        28-07-2024     20:29            186 app.py
+-a----        28-07-2024     20:31           1642 compose.yaml
+-a----        28-07-2024     20:31           1617 Dockerfile
+-a----        28-07-2024     20:31            826 README.Docker.md
+-a----        28-07-2024     20:29             28 requirements.txt
+
+
+PS C:\Users\lenovo\simple-python-app>
+
+PS C:\Users\lenovo\simple-python-app> cat .\Dockerfile
+# syntax=docker/dockerfile:1
+
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Dockerfile reference guide at
+# https://docs.docker.com/go/dockerfile-reference/
+
+# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
+
+ARG PYTHON_VERSION=3.10.0
+FROM python:${PYTHON_VERSION}-slim as base
+
+# Prevents Python from writing pyc files.
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Keeps Python from buffering stdout and stderr to avoid situations where
+# the application crashes without emitting any logs due to buffering.
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
+
+# Download dependencies as a separate step to take advantage of Docker's caching.
+# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
+# Leverage a bind mount to requirements.txt to avoid having to copy them into
+# into this layer.
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    python -m pip install -r requirements.txt
+
+# Switch to the non-privileged user to run the application.
+USER appuser
+
+# Copy the source code into the container.
+COPY . .
+
+# Expose the port that the application listens on.
+EXPOSE 8000
+
+# Run the application.
+CMD python3 app.py
+PS C:\Users\lenovo\simple-python-app>
+
+
+PS C:\Users\lenovo\simple-python-app> cat .\compose.yaml
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+
+# The commented out section below is an example of how to define a PostgreSQL
+# database that your application can use. `depends_on` tells Docker Compose to
+# start the database before your application. The `db-data` volume persists the
+# database data between container restarts. The `db-password` secret is used
+# to set the database password. You must create `db/password.txt` and add
+# a password of your choosing to it before running `docker compose up`.
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#   db:
+#     image: postgres
+#     restart: always
+#     user: postgres
+#     secrets:
+#       - db-password
+#     volumes:
+#       - db-data:/var/lib/postgresql/data
+#     environment:
+#       - POSTGRES_DB=example
+#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+#     expose:
+#       - 5432
+#     healthcheck:
+#       test: [ "CMD", "pg_isready" ]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+# volumes:
+#   db-data:
+# secrets:
+#   db-password:
+#     file: db/password.txt
+
+PS C:\Users\lenovo\simple-python-app>
+
+
+PS C:\Users\lenovo\simple-python-app> docker compose up --build
+[+] Building 25.7s (12/12) FINISHED                                                                   docker:desktop-linux
+ => [server internal] load build definition from Dockerfile                                                           0.1s
+ => => transferring dockerfile: 1.66kB                                                                                0.0s 
+ => [server] resolve image config for docker-image://docker.io/docker/dockerfile:1                                    3.5s
+
+check on browser:
+http://127.0.0.1:8000/
+replyL Hello-world
+
+
+
+
+
+
+cherryniks@CherryNiks:~$ docker image ls
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+nginx        latest    a72860cb95fd   5 weeks ago   188MB
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker image rm nginx
+Untagged: nginx:latest
+Untagged: nginx@sha256:6af79ae5de407283dcea8b00d5c37ace95441fd58a8b1d2aa1ed93f5511bb18c
+Deleted: sha256:a72860cb95fd59e9c696c66441c64f18e66915fa26b249911e83c3854477ed9a
+Deleted: sha256:1188c692bee9694c47db34046023dbd938d88f303f216ef689863741b2d1a900
+Deleted: sha256:3eefccfd7e5fd8bbb2bd982509dc79206b056f22dd2b14553951a743833b0d09
+Deleted: sha256:5234252bfd2bba1548a4998869e9a01aedfe3b319ce61acbe98f8aec223640e7
+Deleted: sha256:b292d631e6ca5af8269dc2cf3ec47be1f9faa0865b2aaa794daa2b8c25ea8cb4
+Deleted: sha256:beda8840654459fe0efc1cd0bcae6a00b65b469cc999ebc41608b53c51fb93b4
+Deleted: sha256:7a69d5090b2e7d873a365c81c590b2e6b87a702178b22b3c32c50d35eb7616fc
+Deleted: sha256:e0781bc8667fb5ebf954df4ae52997f6f5568ec9f07e21e5db7c9d324ed41e1f
+cherryniks@CherryNiks:~$ docker image ls
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker image ls -a
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+cherryniks@CherryNiks:~$
+
+
+
+
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                               NAMES
+77342fa04950   nginx:latest   "/docker-entrypoint.…"   9 minutes ago   Up 9 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   nani
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker cp filetocopy 7734:/tmp/filetocopy
+Successfully copied 1.54kB to 7734:/tmp/filetocopy
+cherryniks@CherryNiks:~$ docker exec -it 7734 sh
+# cd /tmp
+# ls -ltr
+total 0
+-rw-r--r-- 1 1002 1002 0 Jul 30 04:28 filetocopy
+#
+
+
+
+
+cherryniks@CherryNiks:~$ docker run -d --name nani -p 80:80 -v nanivol:/tmp -l type=prod --network secure-network --restart always nginx:latest
+# reboot the system ==> Post reboot, when docker daemon started, containers automatically up
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS          PORTS                               NAMES
+9b496d5cf08f   nginx:latest   "/docker-entrypoint.…"   5 minutes ago   Up 13 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp   nani
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS         PORTS                               NAMES
+9b496d5cf08f   nginx:latest   "/docker-entrypoint.…"   24 minutes ago   Up 4 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   nani
+cherryniks@CherryNiks:~$ docker cp nani:/etc/nginx/conf.d/default.conf ./default.conf
+Successfully copied 3.07kB to /home/cherryniks/default.conf
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker cp default.conf nani:/etc/nginx/conf.d/default.conf
+Successfully copied 3.07kB to nani:/etc/nginx/conf.d/default.conf
+cherryniks@CherryNiks:~$
+
+
+
+
+
+cherryniks@CherryNiks:~/docker$ docker build -t apacheserver:1.0 .
+[+] Building 0.3s (10/10) FINISHED                                                                                                                       docker:default
+ => [internal] load build definition from Dockerfile                                                                                                               0.1s
+ => => transferring dockerfile: 250B                                                                                                                               0.0s
+ => [internal] load .dockerignore                                                                                                                                  0.1s
+ => => transferring context: 2B                                                                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:latest                                                                                                   0.0s
+ => [1/5] FROM docker.io/library/ubuntu:latest                                                                                                                     0.0s
+ => [internal] load build context                                                                                                                                  0.0s
+ => => transferring context: 31B                                                                                                                                   0.0s
+ => CACHED [2/5] RUN apt-get update -y                                                                                                                             0.0s
+ => CACHED [3/5] RUN apt-get install -y apache2 curl                                                                                                               0.0s
+ => CACHED [4/5] WORKDIR /var/www/html                                                                                                                             0.0s
+ => [5/5] COPY index.html /var/www/html/index.html                                                                                                                 0.1s
+ => exporting to image                                                                                                                                             0.1s
+ => => exporting layers                                                                                                                                            0.1s
+ => => writing image sha256:95f4ac5a41c478746ffb0b05c5629ac5d58384c8ba7ec06c97d3358d46f43e48                                                                       0.0s
+ => => naming to docker.io/library/apacheserver:1.0                                                                                                                0.0s
+cherryniks@CherryNiks:~/docker$ docker images
+REPOSITORY     TAG       IMAGE ID       CREATED         SIZE
+apacheserver   1.0       95f4ac5a41c4   8 seconds ago   231MB
+nginx          latest    a72860cb95fd   6 weeks ago     188MB
+ubuntu         latest    35a88802559d   8 weeks ago     78.1MB
+busybox        latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~/docker$ docker run -d --name apache1 apacheserver
+Unable to find image 'apacheserver:latest' locally
+docker: Error response from daemon: pull access denied for apacheserver, repository does not exist or may require 'docker login': denied: requested access to the resource is denied.
+See 'docker run --help'.
+cherryniks@CherryNiks:~/docker$ docker run -d --name apache1 apacheserver:1.0
+bb97358ead65ef4e95110b1f5092f499cf1a692d17c9e3de3cea68819d65c7ed
+cherryniks@CherryNiks:~/docker$ docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED         STATUS         PORTS     NAMES
+bb97358ead65   apacheserver:1.0   "/usr/sbin/apache2ct…"   6 seconds ago   Up 6 seconds   80/tcp    apache1
+cherryniks@CherryNiks:~/docker$ docker exec bb97 curl localhost
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    25  100    25    0     0  14124      0 --:--:-- --:--:-- --:--:-- 25000
+<h1>This is sowmya!</h1>
+cherryniks@CherryNiks:~/docker$
+cherryniks@CherryNiks:~/docker$ docker exec -it bb97 sh
+# ifconfig
+sh: 1: ifconfig: not found
+# apt-get update
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+# apt-get install net-tools
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  net-tools
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 204 kB of archives.
+After this operation, 811 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble/main amd64 net-tools amd64 2.10-0.1ubuntu4 [204 kB]
+Fetched 204 kB in 1s (225 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package net-tools.
+(Reading database ... 7856 files and directories currently installed.)
+Preparing to unpack .../net-tools_2.10-0.1ubuntu4_amd64.deb ...
+Unpacking net-tools (2.10-0.1ubuntu4) ...
+Setting up net-tools (2.10-0.1ubuntu4) ...
+# ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.2  netmask 255.255.0.0  broadcast 172.17.255.255
+        ether 02:42:ac:11:00:02  txqueuelen 0  (Ethernet)
+        RX packets 137  bytes 215620 (215.6 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 129  bytes 10386 (10.3 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 10  bytes 860 (860.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 10  bytes 860 (860.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+#
+cherryniks@CherryNiks:~/docker$
+cherryniks@CherryNiks:~/docker$   docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED         STATUS         PORTS     NAMES
+bb97358ead65   apacheserver:1.0   "/usr/sbin/apache2ct…"   8 minutes ago   Up 8 minutes   80/tcp    apache1
+cherryniks@CherryNiks:~/docker$ docker commit apache1 apacheserver
+sha256:cc35fac29cb80b9f4ec807bc7e585029acd91403ea1564ccbfac047ef3de6da6
+cherryniks@CherryNiks:~/docker$ docker images
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+apacheserver   latest    cc35fac29cb8   5 seconds ago    233MB
+apacheserver   1.0       95f4ac5a41c4   10 minutes ago   231MB
+nginx          latest    a72860cb95fd   6 weeks ago      188MB
+ubuntu         latest    35a88802559d   8 weeks ago      78.1MB
+busybox        latest    65ad0d468eb1   14 months ago    4.26MB
+cherryniks@CherryNiks:~/docker$
+
+cherryniks@CherryNiks:~/docker$ docker run -d --name apache2 apacheserver
+7165ea91fece4574f464efae31fbb9c87e08468f23c6e247743dc706c171598b
+cherryniks@CherryNiks:~/docker$ docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED          STATUS          PORTS     NAMES
+7165ea91fece   apacheserver       "/usr/sbin/apache2ct…"   3 seconds ago    Up 3 seconds    80/tcp    apache2
+bb97358ead65   apacheserver:1.0   "/usr/sbin/apache2ct…"   10 minutes ago   Up 10 minutes   80/tcp    apache1
+cherryniks@CherryNiks:~/docker$ docker exec 7165 ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.3  netmask 255.255.0.0  broadcast 172.17.255.255
+        ether 02:42:ac:11:00:03  txqueuelen 0  (Ethernet)
+        RX packets 8  bytes 656 (656.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+cherryniks@CherryNiks:~/docker$
+
+
+
+
+
+----
+docker run -d --name nginx -p 80:80 nginx
+netstat -ntlp # check for port 80 listening
+docker stop <1bed>
+netstat -ntlp # check for port 80 listening
+
+cherryniks@CherryNiks:~$ netstat -ntlp
+(No info could be read for "-p": geteuid()=1002 but you should be root.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:36095         0.0.0.0:*               LISTEN      -
+tcp6       0      0 :::80                   :::*                    LISTEN      -
+tcp6       0      0 :::5000                 :::*                    LISTEN      -
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
+1bec1e81c298   nginx     "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   nginx
+75ae7eb038b3   nhttpd    "httpd-foreground"       2 hours ago     Up 2 hours     80/tcp                              s2
+b17c5646dbc4   nhttpd    "httpd-foreground"       2 hours ago     Up 2 hours     80/tcp                              s1
+80cf4c458ac1   nhttpd    "httpd-foreground"       2 hours ago     Up 2 hours     80/tcp                              gw
+cherryniks@CherryNiks:~$ docker stop 1b
+1b
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND              CREATED       STATUS       PORTS     NAMES
+75ae7eb038b3   nhttpd    "httpd-foreground"   2 hours ago   Up 2 hours   80/tcp    s2
+b17c5646dbc4   nhttpd    "httpd-foreground"   2 hours ago   Up 2 hours   80/tcp    s1
+80cf4c458ac1   nhttpd    "httpd-foreground"   2 hours ago   Up 2 hours   80/tcp    gw
+cherryniks@CherryNiks:~$ netstat -ntlp
+(No info could be read for "-p": geteuid()=1002 but you should be root.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:36095         0.0.0.0:*               LISTEN      -
+tcp6       0      0 :::5000                 :::*                    LISTEN      -
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE              COMMAND                  CREATED         STATUS                      PORTS     NAMES
+1bec1e81c298   nginx              "/docker-entrypoint.…"   7 minutes ago   Exited (0) 4 minutes ago              nginx
+75ae7eb038b3   nhttpd             "httpd-foreground"       2 hours ago     Up 2 hours                  80/tcp    s2
+b17c5646dbc4   nhttpd             "httpd-foreground"       2 hours ago     Up 2 hours                  80/tcp    s1
+80cf4c458ac1   nhttpd             "httpd-foreground"       2 hours ago     Up 2 hours                  80/tcp    gw
+7165ea91fece   apacheserver       "/usr/sbin/apache2ct…"   26 hours ago    Exited (255) 15 hours ago   80/tcp    apache2
+bb97358ead65   apacheserver:1.0   "/usr/sbin/apache2ct…"   26 hours ago    Exited (255) 15 hours ago   80/tcp    apache1
+cherryniks@CherryNiks:~$ docker start 1bec
+1bec
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
+1bec1e81c298   nginx     "/docker-entrypoint.…"   7 minutes ago   Up 5 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp   nginx
+75ae7eb038b3   nhttpd    "httpd-foreground"       2 hours ago     Up 2 hours     80/tcp                              s2
+b17c5646dbc4   nhttpd    "httpd-foreground"       2 hours ago     Up 2 hours     80/tcp                              s1
+80cf4c458ac1   nhttpd    "httpd-foreground"       2 hours ago     Up 2 hours     80/tcp                              gw
+cherryniks@CherryNiks:~$ netstat -nltp
+(No info could be read for "-p": geteuid()=1002 but you should be root.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:36095         0.0.0.0:*               LISTEN      -
+tcp6       0      0 :::80                   :::*                    LISTEN      -
+tcp6       0      0 :::5000                 :::*                    LISTEN      -
+cherryniks@CherryNiks:~$ ifconfig eth0
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.25.34.130  netmask 255.255.240.0  broadcast 172.25.47.255
+        inet6 fe80::215:5dff:fed7:e9b2  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:5d:d7:e9:b2  txqueuelen 1000  (Ethernet)
+        RX packets 40663  bytes 57058479 (57.0 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 6309  bytes 494758 (494.7 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+cherryniks@CherryNiks:~$ curl 172.25.34.130:80
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ curl -I 172.25.34.130:80
+HTTP/1.1 200 OK
+Server: nginx/1.27.0
+Date: Sun, 04 Aug 2024 08:32:01 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Tue, 28 May 2024 13:22:30 GMT
+Connection: keep-alive
+ETag: "6655da96-267"
+Accept-Ranges: bytes
+
+cherryniks@CherryNiks:~$
+
+-----
+
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED       STATUS         PORTS                               NAMES
+1bec1e81c298   nginx     "/docker-entrypoint.…"   7 hours ago   Up 2 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp   nginx
+cherryniks@CherryNiks:~$ docker exec -it 1b hostname
+1bec1e81c298
+cherryniks@CherryNiks:~$ docker exec -it 1b df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay        1007G  3.8G  952G   1% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+shm              64M     0   64M   0% /dev/shm
+/dev/sdc       1007G  3.8G  952G   1% /etc/hosts
+tmpfs           3.9G     0  3.9G   0% /proc/acpi
+tmpfs           3.9G     0  3.9G   0% /proc/scsi
+tmpfs           3.9G     0  3.9G   0% /sys/firmware
+cherryniks@CherryNiks:~$
+
+---
+
+MW patching option   restart policy ==> --restart-policy
+cherryniks@CherryNiks:~$ docker run -d --name testingrestartpolicy --restart unless-stopped nginx
+5e6660be012a7346e1aeff71ed864f0b140e5233b167bb28e686868286a42607
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+5e6660be012a   nginx     "/docker-entrypoint.…"   7 seconds ago   Up 6 seconds   80/tcp    testingrestartpolicy
+cherryniks@CherryNiks:~$ sudo systemctl docker status
+[sudo] password for cherryniks:
+Unknown command verb 'docker', did you mean 'cancel'?
+cherryniks@CherryNiks:~$ sudo systemctl  status docker
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2024-08-04 15:10:11 UTC; 30min ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 336 (dockerd)
+      Tasks: 16
+     Memory: 79.4M ()
+     CGroup: /system.slice/docker.service
+             └─336 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+Aug 04 15:14:16 CherryNiks dockerd[336]: time="2024-08-04T15:14:16.394957831Z" level=error msg="stream copy error: reading from a closed fifo"
+Aug 04 15:14:16 CherryNiks dockerd[336]: time="2024-08-04T15:14:16.403581379Z" level=error msg="Error running exec 0d30f1afb8b658785b6d73a211333b1f3b8bdbb5579f7fd422b8>
+Aug 04 15:14:16 CherryNiks dockerd[336]: time="2024-08-04T15:14:16.404651539Z" level=error msg="failed to close container stdin" container=1bec1e81c2980d0516fccdeb6a20>
+Aug 04 15:27:47 CherryNiks dockerd[336]: time="2024-08-04T15:27:47.546414171Z" level=info msg="ignoring event" container=2cd349359e78b4040695604f43f175c05b2a083d3d93a8>
+Aug 04 15:28:30 CherryNiks dockerd[336]: time="2024-08-04T15:28:30.555330544Z" level=info msg="ignoring event" container=1bec1e81c2980d0516fccdeb6a2093bad3a7bb5c9ad745>
+Aug 04 15:28:40 CherryNiks dockerd[336]: time="2024-08-04T15:28:40.447367788Z" level=info msg="Container failed to exit within 10s of signal 3 - using the force" conta>
+Aug 04 15:28:40 CherryNiks dockerd[336]: time="2024-08-04T15:28:40.447802688Z" level=info msg="Container failed to exit within 10s of signal 3 - using the force" conta>
+Aug 04 15:28:40 CherryNiks dockerd[336]: time="2024-08-04T15:28:40.570485078Z" level=info msg="ignoring event" container=fa8892230023dcedf263baafbd02adfc91e09a01f9d6c0>
+Aug 04 15:28:40 CherryNiks dockerd[336]: time="2024-08-04T15:28:40.570562478Z" level=info msg="ignoring event" container=58d0f2d4749172c023206168c356fdda683407839ed836>
+Aug 04 15:37:26 CherryNiks dockerd[336]: time="2024-08-04T15:37:26.212267725Z" level=info msg="ignoring event" container=ddde50d5de0123bfdd084d2cd73a760f332a0a6616c18f>
+cherryniks@CherryNiks:~$ sudo systemctl  restart  docker
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS         PORTS     NAMES
+5e6660be012a   nginx     "/docker-entrypoint.…"   About a minute ago   Up 3 seconds   80/tcp    testingrestartpolicy
+cherryniks@CherryNiks:~$
+-----
+
+
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS         PORTS     NAMES
+5e6660be012a   nginx     "/docker-entrypoint.…"   About a minute ago   Up 3 seconds   80/tcp    testingrestartpolicy
+cherryniks@CherryNiks:~$ docker rm 5e
+Error response from daemon: You cannot remove a running container 5e6660be012a7346e1aeff71ed864f0b140e5233b167bb28e686868286a42607. Stop the container before attempting removal or force remove
+cherryniks@CherryNiks:~$ docker rm 5e -f
+5e
+cherryniks@CherryNiks:~$
+
+---
+
+# Disk usage of docker components
+cherryniks@CherryNiks:~$ docker system df
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          7         0         575.3MB   575.3MB (100%)
+Containers      0         0         0B        0B
+Local Volumes   0         0         0B        0B
+Build Cache     29        0         516.5MB   516.5MB
+cherryniks@CherryNiks:~$ docker system df -v
+Images space usage:
+
+REPOSITORY     TAG       IMAGE ID       CREATED         SIZE      SHARED SIZE   UNIQUE SIZE   CONTAINERS
+nhttpd         latest    6adfed3fc951   10 hours ago    225MB     148.2MB       77.19MB       0
+apacheserver   latest    cc35fac29cb8   33 hours ago    233MB     230.6MB       2.233MB       0
+apacheserver   1.0       95f4ac5a41c4   34 hours ago    231MB     230.6MB       0B            0
+httpd          latest    19c71fbb7140   2 weeks ago     148MB     148.2MB       0B            0
+nginx          latest    a72860cb95fd   6 weeks ago     188MB     74.78MB       112.8MB       0
+ubuntu         latest    35a88802559d   8 weeks ago     78.1MB    78.05MB       0B            0
+busybox        latest    65ad0d468eb1   14 months ago   4.26MB    0B            4.262MB       0
+
+Containers space usage:
+
+CONTAINER ID   IMAGE     COMMAND   LOCAL VOLUMES   SIZE      CREATED   STATUS    NAMES
+
+Local Volumes space usage:
+
+VOLUME NAME   LINKS     SIZE
+
+Build cache usage: 516.5MB
+
+CACHE ID       CACHE TYPE     SIZE      CREATED        LAST USED      USAGE     SHARED
+kclk6gldabwj   regular        0B        8 days ago     8 days ago     1         true
+9npav7z93kw6   regular        0B        8 days ago     8 days ago     1         false
+omkr3zpfziis   regular        14B       8 days ago     8 days ago     1         false
+drb2dduq6aap   source.local   12.9kB    8 days ago     8 days ago     2         false
+uwtqowqkkijf   regular        516MB     8 days ago     8 days ago     1         false
+oncm9cyyc1hm   source.local   0B        8 days ago     8 days ago     2         false
+qcn7zyon2kck   source.local   307B      8 days ago     8 days ago     2         false
+3y70lnhdxtf6   regular        12.9kB    8 days ago     8 days ago     2         false
+r35la2vco7lg   regular        38.9MB    34 hours ago   34 hours ago   1         true
+u6ddf7pp14qn   regular        114MB     34 hours ago   34 hours ago   1         true
+sn1cf7vlicxn   regular        25B       34 hours ago   34 hours ago   2         false
+mp9k3ihmxziz   regular        0B        34 hours ago   34 hours ago   2         true
+xtft9cr0un7r   source.local   25B       34 hours ago   34 hours ago   3         false
+gbeibcw52q7p   regular        25B       34 hours ago   34 hours ago   1         true
+v0loscjiup6f   source.local   0B        34 hours ago   34 hours ago   3         false
+xvatl35bbr78   source.local   211B      34 hours ago   34 hours ago   3         false
+0gezgunu19gr   regular        0B        10 hours ago   10 hours ago   1         true
+zplimlfsibbu   regular        0B        10 hours ago   10 hours ago   1         true
+njoo2knmlmiv   regular        0B        10 hours ago   10 hours ago   1         true
+ehw71mixo7lz   regular        0B        10 hours ago   10 hours ago   1         true
+5lbw6wwgny5j   regular        0B        10 hours ago   10 hours ago   1         true
+ilcjv99wqu3a   source.local   191B      10 hours ago   10 hours ago   1         false
+cezpvocux040   regular        0B        10 hours ago   10 hours ago   1         true
+vw54fydczita   regular        19.4MB    10 hours ago   10 hours ago   1         true
+5xk1stz9ho5w   regular        2.19MB    10 hours ago   10 hours ago   1         true
+my0m4apahfq8   regular        1.26MB    10 hours ago   10 hours ago   1         true
+z0al3m1u9duo   source.local   0B        10 hours ago   10 hours ago   1         false
+k7lnx10csq10   regular        6.22MB    10 hours ago   10 hours ago   1         true
+7qreoyywwfev   regular        48.1MB    10 hours ago   10 hours ago   1         true
+cherryniks@CherryNiks:~$
+
+
+
+
+# --rm to remove after container exists
+cherryniks@CherryNiks:~$ docker container run -dt --name testcontainer busybox ping -c10 google.com
+6978dc825f9f8e2cc18aef09b3c0b6e2df2c0e8afbad56b021b6989de141826d
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+6978dc825f9f   busybox   "ping -c10 google.com"   6 seconds ago   Up 5 seconds             testcontainer
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$ docker logs testcontainer
+PING google.com (142.250.193.206): 56 data bytes
+64 bytes from 142.250.193.206: seq=0 ttl=110 time=46.061 ms
+64 bytes from 142.250.193.206: seq=1 ttl=110 time=46.252 ms
+64 bytes from 142.250.193.206: seq=2 ttl=110 time=46.653 ms
+64 bytes from 142.250.193.206: seq=3 ttl=110 time=42.733 ms
+64 bytes from 142.250.193.206: seq=4 ttl=110 time=45.191 ms
+64 bytes from 142.250.193.206: seq=5 ttl=110 time=43.034 ms
+64 bytes from 142.250.193.206: seq=6 ttl=110 time=44.648 ms
+64 bytes from 142.250.193.206: seq=7 ttl=110 time=42.672 ms
+64 bytes from 142.250.193.206: seq=8 ttl=110 time=47.188 ms
+64 bytes from 142.250.193.206: seq=9 ttl=110 time=47.275 ms
+
+--- google.com ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 42.672/45.170/47.275 ms
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                      PORTS     NAMES
+6978dc825f9f   busybox   "ping -c10 google.com"   35 seconds ago   Exited (0) 25 seconds ago             testcontainer
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker container run -dt --rm --name testcontainer1 busybox ping -c10 google.com
+4beeafb07e658fd42bacba0081023a47c46e58c64ccf82b75b5f81cbbe062f80
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+4beeafb07e65   busybox   "ping -c10 google.com"   4 seconds ago   Up 3 seconds             testcontainer1
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+cherryniks@CherryNiks:~$ docker logs testcontainer1
+Error response from daemon: No such container: testcontainer1
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS                     PORTS     NAMES
+6978dc825f9f   busybox   "ping -c10 google.com"   2 minutes ago   Exited (0) 2 minutes ago             testcontainer
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker container run -dt --rm --name testcontainer2 busybox ping -c10 google.com
+0ff847374bae1a018bee7e4d02b487bc1aa46aa1b961f551cd68ae62ad71d10b
+cherryniks@CherryNiks:~$ docker logs testcontainer2
+PING google.com (142.250.193.206): 56 data bytes
+64 bytes from 142.250.193.206: seq=0 ttl=110 time=44.521 ms
+64 bytes from 142.250.193.206: seq=1 ttl=110 time=46.230 ms
+64 bytes from 142.250.193.206: seq=2 ttl=110 time=45.376 ms
+64 bytes from 142.250.193.206: seq=3 ttl=110 time=46.060 ms
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS                     PORTS     NAMES
+0ff847374bae   busybox   "ping -c10 google.com"   7 seconds ago   Up 7 seconds                         testcontainer2
+6978dc825f9f   busybox   "ping -c10 google.com"   3 minutes ago   Exited (0) 2 minutes ago             testcontainer
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS                     PORTS     NAMES
+6978dc825f9f   busybox   "ping -c10 google.com"   3 minutes ago   Exited (0) 2 minutes ago             testcontainer
+cherryniks@CherryNiks:~$
+
+
+----
+# None network type contains only loop interface
+cherryniks@CherryNiks:~$ docker run -d --name nonenetwork --network none nginx
+a5490ba342cb3d86760c993218c0a7f52a0a2c639ef01ebadb1bf746d5f73e2a
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+a5490ba342cb   nginx     "/docker-entrypoint.…"   2 seconds ago    Up 2 seconds              nonenetwork
+8676151e4f6b   nginx     "/docker-entrypoint.…"   22 minutes ago   Up 22 minutes   80/tcp    testcnt
+cherryniks@CherryNiks:~$ docker exec -it a54 bash
+root@a5490ba342cb:/# ifconfig
+bash: ifconfig: command not found
+root@a5490ba342cb:/#
+
+------------
+#Publish hostport to container without/won't specify
+docker run -d --name webcnt nginx  ##without host port specify, can't connect 
+docker run -d --name webcnt1 -p 80:80 nginx ##specify hostport 80
+docker run -d --name webcnt2 -P nginx  ##Random host port assigned
+
+cherryniks@CherryNiks:~$ docker run -d --name webcnt nginx
+31c9d809d7d667e65837c04b9515a9fd8859ef820c545de6074d7bc369b78f53
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+31c9d809d7d6   nginx     "/docker-entrypoint.…"   5 seconds ago   Up 4 seconds   80/tcp    webcnt
+cherryniks@CherryNiks:~$ curl http://localhost:80
+curl: (7) Failed to connect to localhost port 80 after 0 ms: Couldn't connect to server
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker run -d --name webcnt1 -p 80:80 nginx
+63ee4b37ec5cfc107f779ebaf35e265ac5025724fd381dc1811eb74c20568aa5
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                               NAMES
+63ee4b37ec5c   nginx     "/docker-entrypoint.…"   4 seconds ago    Up 3 seconds    0.0.0.0:80->80/tcp, :::80->80/tcp   webcnt1
+31c9d809d7d6   nginx     "/docker-entrypoint.…"   59 seconds ago   Up 58 seconds   80/tcp                              webcnt
+cherryniks@CherryNiks:~$ curl http://localhost:80
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker run -d --name webcnt2 -P nginx
+85ec55bd1fd8071c92012c8694e74853f104a904586dcd6b33abea445512f401
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS              PORTS                                     NAMES
+85ec55bd1fd8   nginx     "/docker-entrypoint.…"   3 seconds ago        Up 2 seconds        0.0.0.0:32768->80/tcp, :::32768->80/tcp   webcnt2
+63ee4b37ec5c   nginx     "/docker-entrypoint.…"   28 seconds ago       Up 27 seconds       0.0.0.0:80->80/tcp, :::80->80/tcp         webcnt1
+31c9d809d7d6   nginx     "/docker-entrypoint.…"   About a minute ago   Up About a minute   80/tcp                                    webcnt
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ curl http://localhost:32768
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+cherryniks@CherryNiks:~$
+
+------------
+
+# Add hostname to container
+cherryniks@CherryNiks:~$ docker run -d --hostname niks --name cherry nginx
+c707e45b9370b7230b84e0903991e517d9eab4d87248e60378e4e0f2a8d1256d
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES
+c707e45b9370   nginx     "/docker-entrypoint.…"   3 seconds ago   Up 2 seconds   80/tcp    cherry
+cherryniks@CherryNiks:~$ docker exec -it c707 sh
+# hostname
+niks
+#
+
+------------
+
+cherryniks@CherryNiks:~$ docker run -d --hostname niks --name cherry --restart unless-stopped -P --network bridge nginx:latest
+eb85acd7547981a642525918a14c243cc5c4377d2560d9120a3e6a2a6e40fb44
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                     NAMES
+eb85acd75479   nginx:latest   "/docker-entrypoint.…"   4 seconds ago   Up 4 seconds   0.0.0.0:32769->80/tcp, :::32769->80/tcp   cherry
+cherryniks@CherryNiks:~$ docker exec -it eb sh
+# hostname
+niks
+#
+cherryniks@CherryNiks:~$
+------------cherryniks@CherryNiks:~$ docker run -d --hostname niks --rm --name cherry --restart unless-stopped -P --network bridge nginx:latest
+docker: Conflicting options: --restart and --rm.
+See 'docker run --help'.
+cherryniks@CherryNiks:~$ docker run -d --hostname niks --rm --name cherry  -P --network bridge nginx:latest
+2c6f90424773c07588d2fb3ed1badae726575f99859f180e3214dc0f67495130
+cherryniks@CherryNiks:~$
+
+-----
+
+cherryniks@CherryNiks:~$ docker info | grep -i log
+ Logging Driver: json-file
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker info | grep -i logging
+ Logging Driver: json-file
+cherryniks@CherryNiks:~$
+
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS                       PORTS     NAMES
+41ea79c73dba   nginx     "/docker-entrypoint.…"   6 seconds ago   Exited (127) 5 seconds ago             mycnt
+cherryniks@CherryNiks:~$ docker logs 41
+/docker-entrypoint.sh: 47: exec: ping: not found
+cherryniks@CherryNiks:~$ docker container inspect 41
+[
+    {
+        "Id": "41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c",
+        "Created": "2024-08-05T05:51:17.418142877Z",
+        "Path": "/docker-entrypoint.sh",
+        "Args": [
+            "ping",
+            "google.com"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 127,
+            "Error": "",
+            "StartedAt": "2024-08-05T05:51:17.83794667Z",
+            "FinishedAt": "2024-08-05T05:51:17.841633169Z"
+        },
+        "Image": "sha256:a72860cb95fd59e9c696c66441c64f18e66915fa26b249911e83c3854477ed9a",
+        "ResolvConfPath": "/var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c/hostname",
+        "HostsPath": "/var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c/hosts",
+        "LogPath": "/var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c-json.log",
+        "Name": "/mycnt",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                30,
+                120
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "host",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/9f8736fc433008f9aca6a1d6fcbeb096707e34eca71b9f549b47e8df0a4ce9ae-init/diff:/var/lib/docker/overlay2/ec62bebf3fb00a6c8c8c20a71c0036698b4f9ed82d891462c6c3686f936c9af5/diff:/var/lib/docker/overlay2/9e5b81c5b1ceb8c15147819be9400c7ef316304d76832a53667291f787aff03a/diff:/var/lib/docker/overlay2/79661b115abd4c0a88e57c738e26959ada8573f2a18e28b09ab8306a36e9d258/diff:/var/lib/docker/overlay2/45b362b832450a6ae7ca2680212a6d6f9b41a34858db8a13a04bb649955865f4/diff:/var/lib/docker/overlay2/237a56f13f59a97a56090f27ea3405f7daea747e558d196db4e5a61997232b40/diff:/var/lib/docker/overlay2/498812f3f3b1afc60f31e23b83a82273af0d238a8173ed6ee50708528eb1a01c/diff:/var/lib/docker/overlay2/cb264ac0149601fe5bf676b9623ece47e865042e121e059c4d58eac7808db0b3/diff",
+                "MergedDir": "/var/lib/docker/overlay2/9f8736fc433008f9aca6a1d6fcbeb096707e34eca71b9f549b47e8df0a4ce9ae/merged",
+                "UpperDir": "/var/lib/docker/overlay2/9f8736fc433008f9aca6a1d6fcbeb096707e34eca71b9f549b47e8df0a4ce9ae/diff",
+                "WorkDir": "/var/lib/docker/overlay2/9f8736fc433008f9aca6a1d6fcbeb096707e34eca71b9f549b47e8df0a4ce9ae/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "41ea79c73dba",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "80/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NGINX_VERSION=1.27.0",
+                "NJS_VERSION=0.8.4",
+                "NJS_RELEASE=2~bookworm",
+                "PKG_RELEASE=2~bookworm"
+            ],
+            "Cmd": [
+                "ping",
+                "google.com"
+            ],
+            "Image": "nginx",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
+            },
+            "StopSignal": "SIGQUIT"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "31220b1543a569aecbb4a2805a2586a53fe45cfda7de22c412562ec4226e0c79",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/31220b1543a5",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "ab3f41837ccc7010c018cc3029a64d0fa1dc7a6c93403355ea28568876c3258e",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ cat /var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c-json.log
+cat: /var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c-json.log: Permission denied
+cherryniks@CherryNiks:~$ sudo cat /var/lib/docker/containers/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01f
+df15c/41ea79c73dba9a921db9340fbed65494b6aa94848233c2da9c6aa76e01fdf15c-json.log
+[sudo] password for cherryniks:
+{"log":"/docker-entrypoint.sh: 47: exec: ping: not found\n","stream":"stderr","time":"2024-08-05T05:51:17.83798727Z"}
+cherryniks@CherryNiks:~$
+
+
+cherryniks@CherryNiks:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS                       PORTS     NAMES
+41ea79c73dba   nginx     "/docker-entrypoint.…"   5 minutes ago   Exited (127) 5 minutes ago             mycnt
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker logs 41
+/docker-entrypoint.sh: 47: exec: ping: not found
+cherryniks@CherryNiks:~$
+--------------------
+Docker file
+From apacheserver
+HEALTHCHECK --interval=5s CMD ping -c 1 172.17.0.2
+
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS                             PORTS     NAMES
+3c2fff54dec3   monitoring     "sh"                     14 seconds ago   Up 13 seconds (health: starting)             monitor
+3aedda25e176   apacheserver   "/usr/sbin/apache2ct…"   4 minutes ago    Up 4 minutes                       80/tcp    c1
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS                      PORTS     NAMES
+3c2fff54dec3   monitoring     "sh"                     17 seconds ago   Up 16 seconds (unhealthy)             monitor
+3aedda25e176   apacheserver   "/usr/sbin/apache2ct…"   4 minutes ago    Up 4 minutes                80/tcp    c1
+cherryniks@CherryNiks:~/docker/HEALTHCHK$
+
+docker build -t monitoring .
+
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "ping -c 1 172.17.0.2"
+
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker inspect monitor
+
+---
+
+
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker run -dt --name tmp --health-cmd "curl -f http://localhost" busybox sh
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS                             PORTS     NAMES
+9459811d363a   busybox        "sh"                     14 seconds ago   Up 13 seconds (health: starting)             tmp
+3aedda25e176   apacheserver   "/usr/sbin/apache2ct…"   29 minutes ago   Up 28 minutes                      80/tcp    c1
+cherryniks@CherryNiks:
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED              STATUS                          PORTS     NAMES
+9459811d363a   busybox        "sh"                     About a minute ago   Up About a minute (unhealthy)             tmp
+3aedda25e176   apacheserver   "/usr/sbin/apache2ct…"   30 minutes ago       Up 30 minutes                   80/tcp    c1
+cherryniks@CherryNiks:~/docker/HEALTHCHK$s
+
+cherryniks@CherryNiks:~/docker/HEALTHCHK$ docker inspect tmp
+"Health": {
+                "Status": "unhealthy",
+                "FailingStreak": 15,
+                "Log": [
+                    {
+                        "Start": "2024-08-05T10:58:11.029377726Z",
+                        "End": "2024-08-05T10:58:11.160001532Z",
+                        "ExitCode": 127,
+                        "Output": "/bin/sh: curl: not found\n"
+                    },
+                    {
+
+----
+
+Dockerfile - Demo Code 1:
+
+FROM busybox
+RUN mkdir -p /root/demo
+WORKDIR /root/demo
+RUN touch file01.txt
+CMD ["/bin/sh"]
+Demo Code 2:
+
+FROM busybox
+RUN mkdir -p /root/demo/context1/context2
+WORKDIR /root/demo
+WORKDIR context1
+WORKDIR context2
+RUN touch file01.txt
+CMD ["/bin/sh"]
+
+---
+FROM busybox
+ENV NGINX 1.2
+RUN touch web-$NGINX.txt
+CMD ["/bin/sh"]
+
+docker run -dt --name env1 env sh
+docker exec -it env1 sh
+
+cherryniks@CherryNiks:~/docker/WRKDIR1$   docker run -dt --name env02 --env USER=ADMINUSER busybox sh
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+ec562eabd705: Already exists
+Digest: sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7
+Status: Downloaded newer image for busybox:latest
+b9281a9de382cd2009260170f8d52d61cd6981279c044edda5f8db286177e413
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND     CREATED              STATUS                          PORTS     NAMES
+b9281a9de382   busybox   "sh"        12 seconds ago       Up 10 seconds                             env02
+071feff87b89   env       "/bin/sh"   About a minute ago   Exited (0) About a minute ago             envcnt1
+d1b6aef7a67e   env       "/bin/sh"   2 minutes ago        Exited (0) 2 minutes ago                  envcnt
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker exec -it env02 sh
+/ # echo $USER
+ADMINUSER
+/ #
+
+
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+env          latest    d4d89aa84286   9 minutes ago   4.26MB
+busybox      latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker run -dt --name --name env1 env sh
+Unable to find image 'env1:latest' locally
+docker: Error response from daemon: pull access denied for env1, repository does not exist or may require 'docker login': denied: requested access to the resource is denied.
+See 'docker run --help'.
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker run -dt --name env1 env sh
+3d0543351ed4903b2291a42b829c1fbefc323c35203c829b21b8f91ca0b2a085
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+3d0543351ed4   env       "sh"      4 seconds ago   Up 4 seconds             env1
+b9281a9de382   busybox   "sh"      7 minutes ago   Up 7 minutes             env02
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker exec -it env1 sh
+/ # ls -ltr
+total 40
+drwxr-xr-x    4 root     root          4096 May 18  2023 var
+drwxr-xr-x    4 root     root          4096 May 18  2023 usr
+drwxrwxrwt    2 root     root          4096 May 18  2023 tmp
+lrwxrwxrwx    1 root     root             3 May 18  2023 lib64 -> lib
+drwxr-xr-x    2 root     root          4096 May 18  2023 lib
+drwxr-xr-x    2 nobody   nobody        4096 May 18  2023 home
+drwxr-xr-x    2 root     root         12288 May 18  2023 bin
+-rw-r--r--    1 root     root             0 Aug  5 11:35 web-1.2.txt
+dr-xr-xr-x   13 root     root             0 Aug  5 11:45 sys
+dr-xr-xr-x  197 root     root             0 Aug  5 11:45 proc
+drwxr-xr-x    1 root     root          4096 Aug  5 11:45 etc
+drwxr-xr-x    5 root     root           360 Aug  5 11:45 dev
+drwx------    1 root     root          4096 Aug  5 11:45 root
+/ #
+ ---------
+
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+env          latest    d4d89aa84286   14 minutes ago   4.26MB
+busybox      latest    65ad0d468eb1   14 months ago    4.26MB
+cherryniks@CherryNiks:~/docker/WRKDIR1$
+cherryniks@CherryNiks:~/docker/WRKDIR1$
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker history busybox
+IMAGE          CREATED         CREATED BY                          SIZE      COMMENT
+65ad0d468eb1   14 months ago   BusyBox 1.36.1 (glibc), Debian 12   4.26MB
+cherryniks@CherryNiks:~/docker/WRKDIR1$ docker history env
+IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
+d4d89aa84286   14 minutes ago   CMD ["/bin/sh"]                                 0B        buildkit.dockerfile.v0
+<missing>      14 minutes ago   RUN /bin/sh -c touch web-$NGINX.txt # buildk…   0B        buildkit.dockerfile.v0
+<missing>      14 minutes ago   ENV NGINX=1.2                                   0B        buildkit.dockerfile.v0
+<missing>      14 months ago    BusyBox 1.36.1 (glibc), Debian 12               4.26MB
+cherryniks@CherryNiks:~/docker/WRKDIR1$
+## tagging images
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+env          latest    d4d89aa84286   21 minutes ago   4.26MB
+busybox      latest    65ad0d468eb1   14 months ago    4.26MB
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+env          latest    d4d89aa84286   21 minutes ago   4.26MB
+env          v1.0      d4d89aa84286   21 minutes ago   4.26MB
+busybox      latest    65ad0d468eb1   14 months ago    4.26MB
+cherryniks@CherryNiks:~$
+
+----
+
+cherryniks@CherryNiks:~$ docker image inspect busybox --format='{{.Id}}'
+sha256:65ad0d468eb1c558bf7f4e64e790f586e9eda649ee9f130cd0e835b292bbc5ac
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+env          latest    d4d89aa84286   25 minutes ago   4.26MB
+env          v1.0      d4d89aa84286   25 minutes ago   4.26MB
+busybox      latest    65ad0d468eb1   14 months ago    4.26MB
+cherryniks@CherryNiks:~$ docker image inspect busybox --format='{{.Architecture}}'
+amd64
+cherryniks@CherryNiks:~$ docker image inspect busybox | grep Architecture
+        "Architecture": "amd64",
+cherryniks@CherryNiks:~$
+
+ "ContainerConfig": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+
+cherryniks@CherryNiks:~$ docker image inspect busybox --format='{{.ContainerConfig.Tty}}'
+false
+cherryniks@CherryNiks:~$
+
+
+cherryniks@CherryNiks:~$ docker image inspect busybox --format='{{json .ContainerConfig}}'
+{"Hostname":"","Domainname":"","User":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":null,"Cmd":null,"Image":"","Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":null}
+cherryniks@CherryNiks:~$
+
+###
+To merge layers
+cherryniks@CherryNiks:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED              STATUS              PORTS     NAMES
+647696c49380   ubuntu    "sh"      About a minute ago   Up About a minute             myubuntu1
+3d0543351ed4   env       "sh"      34 minutes ago       Up 34 minutes                 env1
+b9281a9de382   busybox   "sh"      41 minutes ago       Up 41 minutes                 env02
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker export myubuntu1 > myubuntuctr1.tar
+cherryniks@CherryNiks:~$ cat myubuntuctr1.tar | docker import - newubuntu
+sha256:e01206d9c6659acd4c04c7ee1aafbf3f103612ba44b4585aac6863b9120e5d5d
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+newubuntu    latest    e01206d9c665   4 seconds ago    78.1MB
+env          latest    d4d89aa84286   48 minutes ago   4.26MB
+env          v1.0      d4d89aa84286   48 minutes ago   4.26MB
+ubuntu       latest    35a88802559d   8 weeks ago      78.1MB
+busybox      latest    65ad0d468eb1   14 months ago    4.26MB
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker image history newubuntu:latest
+IMAGE          CREATED              CREATED BY   SIZE      COMMENT
+e01206d9c665   About a minute ago                78.1MB    Imported from -
+cherryniks@CherryNiks:~$
+
+
+----
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+newubuntu           latest    e01206d9c665   2 hours ago     78.1MB
+env                 latest    d4d89aa84286   2 hours ago     4.26MB
+env                 v1.0      d4d89aa84286   2 hours ago     4.26MB
+ubuntu              latest    35a88802559d   8 weeks ago     78.1MB
+cherryniks/mydemo   v1        65ad0d468eb1   14 months ago   4.26MB
+busybox             latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$ docker push cherryniks/mydemo:v1
+The push refers to repository [docker.io/cherryniks/mydemo]
+d51af96cf93e: Pushed
+v1: digest: sha256:28e01ab32c9dbcbaae96cf0d5b472f22e231d9e603811857b295e61197e40a9b size: 527
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+newubuntu           latest    e01206d9c665   2 hours ago     78.1MB
+env                 latest    d4d89aa84286   2 hours ago     4.26MB
+env                 v1.0      d4d89aa84286   2 hours ago     4.26MB
+ubuntu              latest    35a88802559d   8 weeks ago     78.1MB
+cherryniks/mydemo   v1        65ad0d468eb1   14 months ago   4.26MB
+busybox             latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$ docker image rm cherryniks/mydemo:v1
+Untagged: cherryniks/mydemo:v1
+Untagged: cherryniks/mydemo@sha256:28e01ab32c9dbcbaae96cf0d5b472f22e231d9e603811857b295e61197e40a9b
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+newubuntu    latest    e01206d9c665   2 hours ago     78.1MB
+env          latest    d4d89aa84286   2 hours ago     4.26MB
+env          v1.0      d4d89aa84286   2 hours ago     4.26MB
+ubuntu       latest    35a88802559d   8 weeks ago     78.1MB
+busybox      latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker pull 
+
+v1: Pulling from cherryniks/mydemo
+Digest: sha256:28e01ab32c9dbcbaae96cf0d5b472f22e231d9e603811857b295e61197e40a9b
+Status: Downloaded newer image for cherryniks/mydemo:v1
+docker.io/cherryniks/mydemo:v1
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+newubuntu           latest    e01206d9c665   2 hours ago     78.1MB
+env                 latest    d4d89aa84286   2 hours ago     4.26MB
+env                 v1.0      d4d89aa84286   2 hours ago     4.26MB
+ubuntu              latest    35a88802559d   8 weeks ago     78.1MB
+cherryniks/mydemo   v1        65ad0d468eb1   14 months ago   4.26MB
+busybox             latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$
+
+---
+
+# docker search 
+cherryniks@CherryNiks:~$ docker search nginx
+NAME                                          DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+nginx                                         Official build of Nginx.                        20057     [OK]
+unit                                          Official build of NGINX Unit: Universal Web …   33        [OK]
+nginx/nginx-ingress                           NGINX and  NGINX Plus Ingress Controllers fo…   92
+bitnami/nginx                                 Bitnami container image for NGINX               193                  [OK]
+rancher/nginx-ingress-controller                                                              13
+nginx/unit                                    This repository is retired, use the Docker o…   63
+nginxinc/nginx-s3-gateway                     Authenticating and caching gateway based on …   6
+rancher/nginx                                                                                 2
+bitnami/wordpress-nginx                       Bitnami container image for WordPress with N…   91                   [OK]
+kasmweb/nginx                                 An Nginx image based off nginx:alpine and in…   8
+nginx/nginx-ingress-operator                  NGINX Ingress Operator for NGINX and NGINX P…   2
+paketobuildpacks/nginx                                                                        0
+bitnamicharts/nginx                                                                           0
+nginxproxy/nginx-proxy                        Automated nginx proxy for Docker containers …   143
+rancher/k3d-proxy                             NGINX configured via confd to proxy requests…   1
+rancher/mirrored-longhornio-longhorn-engine                                                   0
+nginxinc/nginx-unprivileged                   Unprivileged NGINX Dockerfiles                  155
+newrelic/k8s-nri-nginx                        New Relic Infrastructure NGINX Integration (…   1
+droidwiki/nginx                                                                               0
+stackstorm/st2timersengine                                                                    0
+rancher/longhorn-engine                                                                       0
+rapidfort/nginx                               RapidFort optimized, hardened image for NGINX   15
+linuxserver/nginx                             An Nginx container, brought to you by LinuxS…   217
+rapidfort/nginx-ib                            RapidFort optimized, hardened image for NGIN…   10
+vmware/nginx                                                                                  2
+cherryniks@CherryNiks:~$ docker search nginx --limit 5
+NAME                              DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+nginx                             Official build of Nginx.                        20057     [OK]
+unit                              Official build of NGINX Unit: Universal Web …   33        [OK]
+nginxinc/nginx-unprivileged       Unprivileged NGINX Dockerfiles                  155
+nginx/nginx-ingress               NGINX and  NGINX Plus Ingress Controllers fo…   92
+nginx/nginx-prometheus-exporter   NGINX Prometheus Exporter for NGINX and NGIN…   42
+'
+cherryniks@CherryNiks:~$ docker search nginx --filter="is-official=true"
+NAME      DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+nginx     Official build of Nginx.                        20057     [OK]
+unit      Official build of NGINX Unit: Universal Web …   33        [OK]
+cherryniks@CherryNiks:~$ 
+
+---
+
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+newubuntu           latest    e01206d9c665   4 hours ago     78.1MB
+env                 latest    d4d89aa84286   5 hours ago     4.26MB
+env                 v1.0      d4d89aa84286   5 hours ago     4.26MB
+ubuntu              latest    35a88802559d   8 weeks ago     78.1MB
+busybox             latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks/mydemo   v1        65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ docker save busybox > busybox.tar
+cherryniks@CherryNiks:~$ docker image rm busybox:latest
+Untagged: busybox:latest
+Untagged: busybox@sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+newubuntu           latest    e01206d9c665   4 hours ago     78.1MB
+env                 latest    d4d89aa84286   5 hours ago     4.26MB
+env                 v1.0      d4d89aa84286   5 hours ago     4.26MB
+ubuntu              latest    35a88802559d   8 weeks ago     78.1MB
+cherryniks/mydemo   v1        65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$ docker load < busybox.tar
+Loaded image: busybox:latest
+cherryniks@CherryNiks:~$ docker images
+REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+newubuntu           latest    e01206d9c665   4 hours ago     78.1MB
+env                 latest    d4d89aa84286   5 hours ago     4.26MB
+env                 v1.0      d4d89aa84286   5 hours ago     4.26MB
+ubuntu              latest    35a88802559d   8 weeks ago     78.1MB
+cherryniks/mydemo   v1        65ad0d468eb1   14 months ago   4.26MB
+busybox             latest    65ad0d468eb1   14 months ago   4.26MB
+cherryniks@CherryNiks:~$
+
+---
+
+
+configring docker swarm
+Step 1: Open a text file named docker-install.sh via the vi editor
+
+vi docker-install.sh
+
+Step 2: Paste the following script within the text file and save it
+
+#!/bin/bash
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum -y install docker-ce
+systemctl start docker
+systemctl enable docker
+Step 3: Make the script executable:
+
+chmod +x docker-install.sh
+
+Step 4: Run the script:
+
+./docker-install.sh
+
+
+
+ Initialize the Swam Manager [Run this from swam01 server]
+
+ifconfig eth0
+docker swarm init --advertise-addr 142.93.214.57
+Verify the Node status
+
+docker node ls
+----
+
+Change the Node Availability to Drain
+
+docker node update --availability drain swarm03
+
+Verify Node status
+
+docker node ls
+
+Change the Node Availability To Active
+
+docker node update --availability active swarm03
+
+---
+
+
+
+docker swarm services
+docker swarm nodes
+
+Inspecting a Service
+
+docker service inspect demotroubleshoot
+docker service inspect demotroubleshoot --pretty
+Inspecting a Node
+
+docker node inspect swarm01 
+docker node inspect swarm01 -pretty
+
+
+--
+Document - Publish Port at Service
+Create a Service by Publishing port
+
+docker service create --name mywebserver --replicas 1 --publish 8080:80 nginx
+
+Verify Ports in Linux Server
+
+netstat -ntlp
+
+Verify IP address
+
+ifconfig eth0
+
+Curl Request to IP on port 8080
+
+curl 142.93.214.57:8080
+---
+
+
+Sample Wordpress Compose file used:
+
+Step 1: Create a new directory named wordpress
+
+mkdir wordpress
+cd wordpress
+
+
+Step 2: Create a file named docker-compose.yml and store the below snippet there:
+
+
+
+version: '3.3'
+ 
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+ 
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+       WORDPRESS_DB_NAME: wordpress
+volumes:
+    db_data: {}
+Start Docker Compose
+
+docker-compose up -d
+
+Bring Down application started via Docker Compose
+
+docker-compose down
+
+
+-----
+
+Document - Docker Stack CLI commands
+docker-compose.yml
+
+version: '3'
+services:
+  webserver:
+    image: nginx
+    ports:
+       - "8080:80"
+  database:
+    image: redis
+Deploy Stack:
+
+docker stack deploy --compose-file docker-compose.yml mydemo
+
+Remove Stack
+
+docker stack rm mydemo
+
+----
+
+
+Document - AutoLock Commands
+Setting up Autolock
+
+docker swarm update --autolock=true
+systemctl restart docker
+docker node ls
+docker swarm unlock
+To Retrieve Key after swam is unlocked
+
+docker swarm unlock-key
+
+To rotate the key:
+
+docker swarm unlock-key --rotate
+
+----
+
+Document - Mount Volumes with Swarm
+Create Service with Volume
+
+docker service create --name myservice --mount type=volume,source=myvolume,target=/mypath nginx
+
+Verify the Host where service is created:
+
+docker service ps myservice
+
+Connect to Container and Verify Mount
+
+docker container exec -it [CONTAINER-ID] bash
+ls -l /
+Verify Volume Information
+
+docker volume ls
+
+Remove Service
+
+docker service rm myservice
+
+----
+
+Document - Setting Constraints
+Creating Service with Node Label Constraints
+
+docker service create --name myconstraint --constraint node.labels.region==blr --replicas 3 nginx
+
+Add a Label to Node:
+
+docker node update --label-add region=mumbai swarm03
+
+Running Nodes in Mumbai Region
+
+docker service create --name myconstraint --constraint node.labels.region==mumbai --replicas 3 nginx
+
+----
+
+Document - Custom Overlay Networks
+Create Service with Custom Overlay Network:
+
+docker service create --name myoverlay --network mynetwork --replicas 3 nginx
+
+Verify Networks:
+
+docker network ls
+
+Find the IP of Container
+
+docker container inspect [CONTAINER-NAME]
+
+Connect to Container and Install Ping
+
+docker container exec -it [CONTAINER-NAME]
+apt-get update && apt-get install iputils-ping
+ping [IP]
+
+----
+
+
+Document - Forcing New Cluster
+docker swarm init --force-new-cluster --advertise-addr 206.189.139.211:2377
+
+--
+

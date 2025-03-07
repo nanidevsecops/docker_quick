@@ -1,0 +1,2346 @@
+cherryniks@CherryNiks:~$ kubectl get nodes
+NAME                STATUS   ROLES    AGE    VERSION
+k8snodepool-brrf3   Ready    <none>   4d5h   v1.30.2
+k8snodepool-brrfn   Ready    <none>   4d5h   v1.30.2
+k8snodepool-brrq9   Ready    <none>   4d5h   v1.30.2
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ kubectl get images
+error: the server doesn't have a resource type "images"
+cherryniks@CherryNiks:~$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+mywbserver   1/1     Running   0          37s
+cherryniks@CherryNiks:~$
+cherryniks@CherryNiks:~$ kubectl exec -it mywbserver bash
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+root@mywbserver:/#
+exit
+cherryniks@CherryNiks:~$ kubectl exec -it mywbserver -- bash
+root@mywbserver:/#
+root@mywbserver:/# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          50G   18G   30G  37% /
+tmpfs            64M     0   64M   0% /dev
+/dev/vda1        50G   18G   30G  37% /etc/hosts
+shm              64M     0   64M   0% /dev/shm
+tmpfs           1.6G   12K  1.6G   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           984M     0  984M   0% /proc/acpi
+tmpfs           984M     0  984M   0% /sys/firmware
+root@mywbserver:/#
+exit
+cherryniks@CherryNiks:~$ kubectl exec -it mywbserver -- df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          50G   18G   30G  37% /
+tmpfs            64M     0   64M   0% /dev
+/dev/vda1        50G   18G   30G  37% /etc/hosts
+shm              64M     0   64M   0% /dev/shm
+tmpfs           1.6G   12K  1.6G   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           984M     0  984M   0% /proc/acpi
+tmpfs           984M     0  984M   0% /sys/firmware
+cherryniks@CherryNiks:~$
+
+
+--
+
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide --show-labels
+NAME         READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES   LABELS
+my-pod       1/1     Running   0          9m10s   10.244.0.169   k8snodepool-brrq9   <none>           <none>            podnum=one
+mywbserver   1/1     Running   0          43m     10.244.0.145   k8snodepool-brrq9   <none>           <none>            podnum=two,run=mywbserver
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl label --overwrite pod mywbserver podnum=twoplus1
+pod/mywbserver labeled
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES   LABELS
+my-pod       1/1     Running   0          12m   10.244.0.169   k8snodepool-brrq9   <none>           <none>            podnum=one
+mywbserver   1/1     Running   0          46m   10.244.0.145   k8snodepool-brrq9   <none>           <none>            podnum=twoplus1,run=mywbserver
+cherryniks@CherryNiks:~/k8s$
+
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl get pods  --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   LABELS
+my-pod       1/1     Running   0          19m   podnum=one,serial=1
+mywbserver   1/1     Running   0          53m   podnum=twoplus1,run=mywbserver,serial=1
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --selector serial=1
+NAME         READY   STATUS    RESTARTS   AGE
+my-pod       1/1     Running   0          20m
+mywbserver   1/1     Running   0          54m
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get  pods -l serial=1
+NAME         READY   STATUS    RESTARTS   AGE
+my-pod       1/1     Running   0          21m
+mywbserver   1/1     Running   0          55m
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl label pod mywbserver podnum-
+pod/mywbserver unlabeled
+cherryniks@CherryNiks:~/k8s$ kubectl get pods  --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   LABELS
+my-pod       1/1     Running   0          24m   podnum=one,serial=1
+mywbserver   1/1     Running   0          58m   run=mywbserver,serial=1
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl run nginx --image=nginx --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ cat label-pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+    env: prod
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f label-pod.yml
+pod/nginx created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods  --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   LABELS
+my-pod       1/1     Running   0          31m   podnum=one,serial=1
+mywbserver   1/1     Running   0          65m   run=mywbserver,serial=1
+nginx        1/1     Running   0          5s    env=prod,run=nginx
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl delete pods --all
+pod "my-pod" deleted
+pod "mywbserver" deleted
+pod "nginx" deleted
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ cat replicaset.yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend-replicaset
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - image: nginx
+        name: nginxcnt
+
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f replicaset.yaml
+replicaset.apps/frontend-replicaset created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                        READY   STATUS              RESTARTS   AGE
+frontend-replicaset-7rq22   1/1     Running             0          10s
+frontend-replicaset-ff4jp   1/1     Running             0          10s
+frontend-replicaset-xrpfv   0/1     ContainerCreating   0          10s
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl delete pod frontend-replicaset-xrpfv
+pod "frontend-replicaset-xrpfv" deleted
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+frontend-replicaset-7rq22   1/1     Running   0          38s
+frontend-replicaset-ff4jp   1/1     Running   0          38s
+frontend-replicaset-xzmb6   1/1     Running   0          3s
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --show-labels
+NAME                        READY   STATUS    RESTARTS   AGE     LABELS
+frontend-replicaset-7rq22   1/1     Running   0          4m8s    tier=frontend
+frontend-replicaset-ff4jp   1/1     Running   0          4m8s    tier=frontend
+frontend-replicaset-xzmb6   1/1     Running   0          3m33s   tier=frontend
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                  DESIRED   CURRENT   READY   AGE
+frontend-replicaset   3         3         3       4m59s
+cherryniks@CherryNiks:~/k8s$ kubectl get replicasets.apps
+NAME                  DESIRED   CURRENT   READY   AGE
+frontend-replicaset   3         3         3       5m7s
+cherryniks@CherryNiks:~/k8s$ kubectl get replicasets
+NAME                  DESIRED   CURRENT   READY   AGE
+frontend-replicaset   3         3         3       5m11s
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                  DESIRED   CURRENT   READY   AGE
+frontend-replicaset   3         3         3       6m39s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+frontend-replicaset-7rq22   1/1     Running   0          7m6s
+frontend-replicaset-ff4jp   1/1     Running   0          7m6s
+frontend-replicaset-xzmb6   1/1     Running   0          6m31s
+cherryniks@CherryNiks:~/k8s$ kubectl delete rs frontend-replicaset
+replicaset.apps "frontend-replicaset" deleted
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+No resources found in default namespace.
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ cat depolyment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - image: nginx:1.27
+        name: nginxcnt
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f depolyment.yml
+deployment.apps/frontend-deployment created
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+frontend-deployment   3/3     3            3           84s
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+frontend-deployment-684544678b   3         3         3       88s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --show-labels
+NAME                                   READY   STATUS    RESTARTS   AGE   LABELS
+frontend-deployment-684544678b-6rkw4   1/1     Running   0          98s   pod-template-hash=684544678b,tier=frontend
+frontend-deployment-684544678b-78skg   1/1     Running   0          98s   pod-template-hash=684544678b,tier=frontend
+frontend-deployment-684544678b-w25sl   1/1     Running   0          98s   pod-template-hash=684544678b,tier=frontend
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl describe deploy frontend-deployment
+Name:                   frontend-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 10 Aug 2024 16:05:39 +0000
+Labels:                 app=guestbook
+                        tier=frontend
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               tier=frontend
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  tier=frontend
+  Containers:
+   nginxcnt:
+    Image:         nginx:1.27
+    Port:          <none>
+    Host Port:     <none>
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   frontend-deployment-684544678b (3/3 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  16m   deployment-controller  Scaled up replica set frontend-deployment-684544678b to 3
+cherryniks@CherryNiks:~/k8s$
+----
+
+
+cherryniks@CherryNiks:~/k8s$ vi depolyment.yml
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+frontend-deployment-684544678b-6rkw4   1/1     Running   0          20m
+frontend-deployment-684544678b-78skg   1/1     Running   0          20m
+frontend-deployment-684544678b-w25sl   1/1     Running   0          20m
+cherryniks@CherryNiks:~/k8s$ kubectl replace -f depolyment.yml
+deployment.apps/frontend-deployment replaced
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+frontend-deployment-684544678b-6rkw4   1/1     Running   0          21m
+frontend-deployment-684544678b-78skg   1/1     Running   0          21m
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+frontend-deployment   2/2     2            2           21m
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+frontend-deployment-684544678b   2         2         2       21m
+cherryniks@CherryNiks:~/k8s$ cat depolyment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - image: nginx:1.27
+        name: nginxcnt
+
+cherryniks@CherryNiks:~/k8s$ kubectl describe deploy frontend-deployment
+Name:                   frontend-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 10 Aug 2024 16:05:39 +0000
+Labels:                 app=guestbook
+                        tier=frontend
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               tier=frontend
+Replicas:               2 desired | 2 updated | 2 total | 2 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  tier=frontend
+  Containers:
+   nginxcnt:
+    Image:         nginx:1.27
+    Port:          <none>
+    Host Port:     <none>
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   frontend-deployment-684544678b (2/2 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  21m   deployment-controller  Scaled up replica set frontend-deployment-684544678b to 3
+  Normal  ScalingReplicaSet  61s   deployment-controller  Scaled down replica set frontend-deployment-684544678b to 2 from 3
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl rollout history deployment frontend-deployment
+deployment.apps/frontend-deployment
+REVISION  CHANGE-CAUSE
+1         <none>
+
+cherryniks@CherryNiks:~/k8s$ vi depolyment.yml
+cherryniks@CherryNiks:~/k8s$ kubectl replace -f depolyment.yml
+deployment.apps/frontend-deployment replaced
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+frontend-deployment   3/4     2            3           24m
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                                   READY   STATUS              RESTARTS   AGE
+frontend-deployment-5864c594c7-6r666   1/1     Running             0          3s
+frontend-deployment-5864c594c7-hwhpm   1/1     Running             0          13s
+frontend-deployment-5864c594c7-pkrv9   1/1     Running             0          12s
+frontend-deployment-5864c594c7-pxggh   0/1     ContainerCreating   0          4s
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+frontend-deployment-5864c594c7   4         4         4       23s
+frontend-deployment-684544678b   0         0         0       24m
+cherryniks@CherryNiks:~/k8s$ cat depolyment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - image: nginx:1.26
+        name: nginxcnt
+
+cherryniks@CherryNiks:~/k8s$ kubectl rollout history deployment frontend-deployment
+deployment.apps/frontend-deployment
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+cherryniks@CherryNiks:~/k8s$ kubectl describe deploy frontend-deployment
+Name:                   frontend-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 10 Aug 2024 16:05:39 +0000
+Labels:                 app=guestbook
+                        tier=frontend
+Annotations:            deployment.kubernetes.io/revision: 2
+Selector:               tier=frontend
+Replicas:               4 desired | 4 updated | 4 total | 4 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  tier=frontend
+  Containers:
+   nginxcnt:
+    Image:         nginx:1.26
+    Port:          <none>
+    Host Port:     <none>
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  frontend-deployment-684544678b (0/0 replicas created)
+NewReplicaSet:   frontend-deployment-5864c594c7 (4/4 replicas created)
+Events:
+  Type    Reason             Age                  From                   Message
+  ----    ------             ----                 ----                   -------
+  Normal  ScalingReplicaSet  25m                  deployment-controller  Scaled up replica set frontend-deployment-684544678b to 3
+  Normal  ScalingReplicaSet  48s                  deployment-controller  Scaled up replica set frontend-deployment-684544678b to 4 from 2
+  Normal  ScalingReplicaSet  48s                  deployment-controller  Scaled up replica set frontend-deployment-5864c594c7 to 1
+  Normal  ScalingReplicaSet  47s                  deployment-controller  Scaled down replica set frontend-deployment-684544678b to 3 from 4
+  Normal  ScalingReplicaSet  47s                  deployment-controller  Scaled up replica set frontend-deployment-5864c594c7 to 2 from 1
+  Normal  ScalingReplicaSet  39s (x2 over 4m13s)  deployment-controller  Scaled down replica set frontend-deployment-684544678b to 2 from 3
+  Normal  ScalingReplicaSet  39s                  deployment-controller  Scaled up replica set frontend-deployment-5864c594c7 to 3 from 2
+  Normal  ScalingReplicaSet  38s                  deployment-controller  Scaled down replica set frontend-deployment-684544678b to 1 from 2
+  Normal  ScalingReplicaSet  38s                  deployment-controller  Scaled up replica set frontend-deployment-5864c594c7 to 4 from 3
+  Normal  ScalingReplicaSet  37s                  deployment-controller  Scaled down replica set frontend-deployment-684544678b to 0 from 1
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl rollout history deployment frontend-deployment
+deployment.apps/frontend-deployment
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+cherryniks@CherryNiks:~/k8s$ kubectl rollout history deployment frontend-deployment --revision 1
+deployment.apps/frontend-deployment with revision #1
+Pod Template:
+  Labels:       pod-template-hash=684544678b
+        tier=frontend
+  Containers:
+   nginxcnt:
+    Image:      nginx:1.27
+    Port:       <none>
+    Host Port:  <none>
+    Environment:        <none>
+    Mounts:     <none>
+  Volumes:      <none>
+  Node-Selectors:       <none>
+  Tolerations:  <none>
+
+cherryniks@CherryNiks:~/k8s$ kubectl rollout history deployment frontend-deployment --revision 2
+deployment.apps/frontend-deployment with revision #2
+Pod Template:
+  Labels:       pod-template-hash=5864c594c7
+        tier=frontend
+  Containers:
+   nginxcnt:
+    Image:      nginx:1.26
+    Port:       <none>
+    Host Port:  <none>
+    Environment:        <none>
+    Mounts:     <none>
+  Volumes:      <none>
+  Node-Selectors:       <none>
+  Tolerations:  <none>
+
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl create deployment demo-deployment --image=nginx --replicas 3
+deployment.apps/demo-deployment created
+cherryniks@CherryNiks:~/k8s$ oc get pods
+oc: command not found
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+demo-deployment-675596c6c-7k4hb        1/1     Running   0          27s
+demo-deployment-675596c6c-8p25p        1/1     Running   0          27s
+demo-deployment-675596c6c-jfd2z        1/1     Running   0          27s
+frontend-deployment-5864c594c7-6r666   1/1     Running   0          18m
+frontend-deployment-5864c594c7-hwhpm   1/1     Running   0          18m
+frontend-deployment-5864c594c7-pkrv9   1/1     Running   0          18m
+frontend-deployment-5864c594c7-pxggh   1/1     Running   0          18m
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+demo-deployment       3/3     3            3           48s
+frontend-deployment   4/4     4            4           43m
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+demo-deployment-675596c6c        3         3         3       66s
+frontend-deployment-5864c594c7   4         4         4       19m
+frontend-deployment-684544678b   0         0         0       43m
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get rs
+NAME                        DESIRED   CURRENT   READY   AGE
+demo-deployment-675596c6c   3         3         3       2m2s
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+demo-deployment   3/3     3            3           2m6s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+demo-deployment-675596c6c-7k4hb   1/1     Running   0          2m11s
+demo-deployment-675596c6c-8p25p   1/1     Running   0          2m11s
+demo-deployment-675596c6c-jfd2z   1/1     Running   0          2m11s
+cherryniks@CherryNiks:~/k8s$
+
+--
+
+cherryniks@CherryNiks:~/k8s$ kubectl get deployments
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+demo-deployment   3/3     3            3           3m42s
+cherryniks@CherryNiks:~/k8s$ kubectl get deployments -o yaml
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2024-08-10T16:48:07Z"
+    generation: 1
+    labels:
+      app: demo-deployment
+    name: demo-deployment
+    namespace: default
+    resourceVersion: "1358917"
+    uid: 74e55d00-2f0b-45b7-81bf-30dca50777da
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 3
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: demo-deployment
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: demo-deployment
+      spec:
+        containers:
+        - image: nginx
+          imagePullPolicy: Always
+          name: nginx
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 3
+    conditions:
+    - lastTransitionTime: "2024-08-10T16:48:10Z"
+      lastUpdateTime: "2024-08-10T16:48:10Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-08-10T16:48:07Z"
+      lastUpdateTime: "2024-08-10T16:48:10Z"
+      message: ReplicaSet "demo-deployment-675596c6c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 3
+    replicas: 3
+    updatedReplicas: 3
+kind: List
+metadata:
+  resourceVersion: ""
+cherryniks@CherryNiks:~/k8s$
+
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl set image deployment demo-deployment nginx=httpd
+deployment.apps/demo-deployment image updated
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                               READY   STATUS              RESTARTS   AGE
+demo-deployment-675596c6c-jfd2z    1/1     Running             0          6m17s
+demo-deployment-75df56d947-5gqhl   0/1     ContainerCreating   0          4s
+demo-deployment-75df56d947-vzgk4   1/1     Running             0          12s
+demo-deployment-75df56d947-wfd6t   1/1     Running             0          19s
+cherryniks@CherryNiks:~/k8s$ kubectl get deployments
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+demo-deployment   3/3     3            3           6m23s
+cherryniks@CherryNiks:~/k8s$ ### demo-deployment-75df56d947-5gqhl   0/1     ContainerCreating   0          4s  ==> This is max surge ( %25 of 3 to run as new )
+cherryniks@CherryNiks:~/k8s$
+
+==> after sometime
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                               READY   STATUS    RESTARTS   AGE
+demo-deployment-75df56d947-5gqhl   1/1     Running   0          2m
+demo-deployment-75df56d947-vzgk4   1/1     Running   0          2m8s
+demo-deployment-75df56d947-wfd6t   1/1     Running   0          2m15s
+cherryniks@CherryNiks:~/k8s$
+
+
+
+==> change maxsurge to 0 cherryniks@CherryNiks:~/k8s$ kubectl edit deployments
+deployment.apps/demo-deployment edited
+cherryniks@CherryNiks:~/k8s$ kubectl set image deployment demo-deployment nginx=nginx
+deployment.apps/demo-deployment image updated
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                               READY   STATUS              RESTARTS   AGE
+demo-deployment-675596c6c-782rh    0/1     ContainerCreating   0          3s
+demo-deployment-675596c6c-gsrsr    1/1     Running             0          5s
+demo-deployment-75df56d947-5gqhl   1/1     Running             0          6m46s
+cherryniks@CherryNiks:~/k8s$ kubectl get deployments -o yaml | grep -i max
+        maxSurge: 0
+        maxUnavailable: 25%
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ kubectl create secret generic firstsecret --from-literal=dbpass=mypass123
+secret/firstsecret created
+cherryniks@CherryNiks:~/k8s$ kubectl get secret
+NAME          TYPE     DATA   AGE
+firstsecret   Opaque   1      4s
+cherryniks@CherryNiks:~/k8s$ kubectl describe secrets firstsecret
+Name:         firstsecret
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  Opaque
+
+Data
+====
+dbpass:  9 bytes
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get secret -o yaml
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    dbpass: bXlwYXNzMTIz
+  kind: Secret
+  metadata:
+    creationTimestamp: "2024-08-11T03:47:11Z"
+    name: firstsecret
+    namespace: default
+    resourceVersion: "1498143"
+    uid: 2b5dbaf2-a434-4b4a-a5de-bc5ff2a07ab2
+  type: Opaque
+kind: List
+metadata:
+  resourceVersion: ""
+cherryniks@CherryNiks:~/k8s$
+
+#base64 encodig
+
+cherryniks@CherryNiks:~/k8s$ echo bXlwYXNzMTIz | base64 -d
+mypass123cherryniks@CherryNiks:~/k8s$
+
+--
+
+mypass123cherryniks@CherryNiks:~/k8s$ echo "dbpassword5678" > credential.txt
+cherryniks@CherryNiks:~/k8s$ kubectl create secret generic firstsecret --from-file=credential.txt
+error: failed to create secret secrets "firstsecret" already exists
+cherryniks@CherryNiks:~/k8s$ kubectl create secret generic filesecret --from-file=credential.txt
+secret/filesecret created
+cherryniks@CherryNiks:~/k8s$ kubectl get secret
+NAME          TYPE     DATA   AGE
+filesecret    Opaque   1      22s
+firstsecret   Opaque   1      5m26s
+cherryniks@CherryNiks:~/k8s$ kubectl describe secrets filesecret
+Name:         filesecret
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  Opaque
+
+Data
+====
+credential.txt:  15 bytes
+cherryniks@CherryNiks:~/k8s$ kubectl get secret filesecret  -o yaml
+apiVersion: v1
+data:
+  credential.txt: ZGJwYXNzd29yZDU2NzgK
+kind: Secret
+metadata:
+  creationTimestamp: "2024-08-11T03:52:15Z"
+  name: filesecret
+  namespace: default
+  resourceVersion: "1499213"
+  uid: f097ce82-bf27-4362-ad7a-62e49b22030b
+type: Opaque
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ echo ZGJwYXNzd29yZDU2NzgK | base64 -d
+dbpassword5678
+cherryniks@CherryNiks:~/k8s$ cat credential.txt
+dbpassword5678
+cherryniks@CherryNiks:~/k8s$
+--
+
+cherryniks@CherryNiks:~/k8s$ cat secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: yamlsecret
+type: opaque
+data:
+  username: dbuser
+  userpassword: dbpasswd123
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f secret.yml
+Error from server (BadRequest): error when creating "secret.yml": Secret in version "v1" cannot be handled as a Secret: illegal base64 data at input byte 4
+cherryniks@CherryNiks:~/k8s$ echo -n "dbuser" | base64
+ZGJ1c2Vy
+cherryniks@CherryNiks:~/k8s$ echo -n "dbpasswd123" | base64
+ZGJwYXNzd2QxMjM=
+cherryniks@CherryNiks:~/k8s$ vi secret.yml
+cherryniks@CherryNiks:~/k8s$ vi secret.yml
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ cat secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: yamlsecret
+type: opaque
+data:
+  username: ZGJ1c2Vy
+  userpassword: ZGJwYXNzd2QxMjM=
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f secret.yml
+secret/yamlsecret created
+cherryniks@CherryNiks:~/k8s$ kubectl get secrets
+NAME          TYPE     DATA   AGE
+filesecret    Opaque   1      11m
+firstsecret   Opaque   1      16m
+yamlsecret    opaque   2      11s
+cherryniks@CherryNiks:~/k8s$ kubectl get secret yamlsecret  -o yaml
+apiVersion: v1
+data:
+  username: ZGJ1c2Vy
+  userpassword: ZGJwYXNzd2QxMjM=
+kind: Secret
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"username":"ZGJ1c2Vy","userpassword":"ZGJwYXNzd2QxMjM="},"kind":"Secret","metadata":{"annotations":{},"name":"yamlsecret","namespace":"default"},"type":"opaque"}
+  creationTimestamp: "2024-08-11T04:03:26Z"
+  name: yamlsecret
+  namespace: default
+  resourceVersion: "1501576"
+  uid: 782e9a86-611f-438a-a45f-8670d3802667
+type: opaque
+cherryniks@CherryNiks:~/k8s$ kubectl describe secrets yamlsecret
+Name:         yamlsecret
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  opaque
+
+Data
+====
+username:      6 bytes
+userpassword:  11 bytes
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+<<< while creating configs, data must be base64 encoded >>>
+---
+
+cherryniks@CherryNiks:~/k8s$ cp secret.yml stringdatasecret.yml
+cherryniks@CherryNiks:~/k8s$ vi stringdatasecret.yml
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get secrets
+NAME          TYPE     DATA   AGE
+filesecret    Opaque   1      17m
+firstsecret   Opaque   1      22m
+yamlsecret    opaque   2      6m19s
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f stringdatasecret.yml
+secret/stringdata created
+cherryniks@CherryNiks:~/k8s$ cat stringdatasecret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: stringdata
+type: opaque
+stringData:
+  config.yaml: |-
+    username: dbadmin
+    userpassword: mypasswd
+cherryniks@CherryNiks:~/k8s$ kubectl get secrets
+NAME          TYPE     DATA   AGE
+filesecret    Opaque   1      18m
+firstsecret   Opaque   1      23m
+stringdata    opaque   1      11s
+yamlsecret    opaque   2      6m51s
+cherryniks@CherryNiks:~/k8s$ kubectl get secret stringdata  -o yaml
+apiVersion: v1
+data:
+  config.yaml: dXNlcm5hbWU6IGRiYWRtaW4KdXNlcnBhc3N3b3JkOiBteXBhc3N3ZA==
+kind: Secret
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Secret","metadata":{"annotations":{},"name":"stringdata","namespace":"default"},"stringData":{"config.yaml":"username: dbadmin\nuserpassword: mypasswd"},"type":"opaque"}
+  creationTimestamp: "2024-08-11T04:10:06Z"
+  name: stringdata
+  namespace: default
+  resourceVersion: "1502985"
+  uid: 17e8313b-ed64-4053-b7dd-4cb9f769950a
+type: opaque
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl describe secrets stringdata
+Name:         stringdata
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  opaque
+
+Data
+====
+config.yaml:  40 bytes
+cherryniks@CherryNiks:~/k8s$
+
+
+
+cherryniks@CherryNiks:~/k8s$ cat secretpod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secretmount
+spec:
+  containers:
+  - name: secretmount
+    image: nginx
+    volumeMounts:
+    - name: foo
+      mountPath: "/etc/foo"
+      readOnly: true
+  volumes:
+  - name: foo
+    secret:
+      secretName: firstsecret
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f secretpod.yml
+pod/secretmount created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+secretmount   1/1     Running   0          4s
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it secretmount bash
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+root@secretmount:/# cd /etc/foo
+root@secretmount:/etc/foo# ls -ltr
+total 0
+lrwxrwxrwx 1 root root 13 Aug 11 13:35 dbpass -> ..data/dbpass
+root@secretmount:/etc/foo# cat dbpass
+mypass123root@secretmount:/etc/foo#
+
+--
+
+cherryniks@CherryNiks:~/k8s$ cat secret-env.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-env
+spec:
+  containers:
+  - name: secret-env
+    image: nginx
+    env:
+      - name: SECRET_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: firstsecret
+            key: dbpass
+  restartPolicy: Never
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f secret-env.yml
+pod/secret-env created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+secret-env    1/1     Running   0          7s
+secretmount   1/1     Running   0          7m35s
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it secret-env bash
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+root@secret-env:/# echo $SECRET_USERNAME
+mypass123
+root@secret-env:/#
+
+
+---
+cherryniks@CherryNiks:~/k8s$ kubectl create configmap dev-properties --from-file=dev.properties
+configmap/dev-properties created
+cherryniks@CherryNiks:~/k8s$ kubectl get configmap
+NAME               DATA   AGE
+dev-config         1      4m50s
+dev-properties     1      5s
+kube-root-ca.crt   1      5d8h
+cherryniks@CherryNiks:~/k8s$ kubectl get configmap dev-properties -o yaml
+apiVersion: v1
+data:
+  dev.properties: |
+    app.env=dev
+    app.mem=2048m
+    app.properties=dev.env.url
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2024-08-11T14:00:30Z"
+  name: dev-properties
+  namespace: default
+  resourceVersion: "1627543"
+  uid: 52240aac-a532-4934-aac9-4dfefaa7670d
+cherryniks@CherryNiks:~/k8s$ cat dev.properties
+app.env=dev
+app.mem=2048m
+app.properties=dev.env.url
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f pod-configmap.yml
+pod/configmap-pod created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+configmap-pod   1/1     Running   0          3s
+secret-env      1/1     Running   0          29m
+secretmount     1/1     Running   0          37m
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it configmap-pod bash
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+root@configmap-pod:/# cd /etc/config/
+root@configmap-pod:/etc/config# ls- ltr
+bash: ls-: command not found
+root@configmap-pod:/etc/config# ls -ltr
+total 0
+lrwxrwxrwx 1 root root 21 Aug 11 14:13 dev.properties -> ..data/dev.properties
+root@configmap-pod:/etc/config# cat dev.properties
+app.env=dev
+app.mem=2048m
+app.properties=dev.env.url
+root@configmap-pod:/etc/config#
+exit
+cherryniks@CherryNiks:~/k8s$ cat dev.properties
+app.env=dev
+app.mem=2048m
+app.properties=dev.env.url
+cherryniks@CherryNiks:~/k8s$ cat pod-configmap.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-pod
+spec:
+  containers:
+  - name: test-container
+    image: nginx
+    volumeMounts:
+    - name: config-volume
+      mountPath: "/etc/config"
+  volumes:
+  - name: config-volume
+    configMap:
+      name: dev-properties
+  restartPolicy: Never
+cherryniks@CherryNiks:~/k8s$
+
+---
+# To list containers in pod
+cherryniks@CherryNiks:~/k8s$ kubectl get pods configmap-pod -o jsonpath='{.spec.containers[*].name}'
+test-containercherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ kubectl run backend-pod-1 --image=nginx
+kubectl run backend-pod-2 --image=nginx
+pod/backend-pod-1 created
+cherryniks@CherryNiks:~/k8s$ kubectl run backend-pod-2 --image=nginx
+pod/backend-pod-2 created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+backend-pod-1   1/1     Running   0          9s
+backend-pod-2   1/1     Running   0          7s
+configmap-pod   1/1     Running   0          30m
+secret-env      1/1     Running   0          60m
+secretmount     1/1     Running   0          68m
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl delete pods configmap-pod secret-env secretmount
+pod "configmap-pod" deleted
+pod "secret-env" deleted
+pod "secretmount" deleted
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+backend-pod-1   1/1     Running   0          47s
+backend-pod-2   1/1     Running   0          45s
+cherryniks@CherryNiks:~/k8s$ kubectl run frontend-pod --image=ubuntu --command -- sleep 3600
+pod/frontend-pod created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME            READY   STATUS              RESTARTS   AGE
+backend-pod-1   1/1     Running             0          56s
+backend-pod-2   1/1     Running             0          54s
+frontend-pod    0/1     ContainerCreating   0          2s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+NAME            READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES
+backend-pod-1   1/1     Running   0          68s   10.244.0.173   k8snodepool-brrq9   <none>           <none>
+backend-pod-2   1/1     Running   0          66s   10.244.0.223   k8snodepool-brrq9   <none>           <none>
+frontend-pod    1/1     Running   0          14s   10.244.0.185   k8snodepool-brrq9   <none>           <none>
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it frontend-pod -- bash
+root@frontend-pod:/# apt-get update && apt-get -y install curl
+Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+<< OP Ommited >>>
+Processing triggers for ca-certificates (20240203) ...
+Updating certificates in /etc/ssl/certs...
+0 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+root@frontend-pod:/#
+root@frontend-pod:/#
+root@frontend-pod:/#
+root@frontend-pod:/# curl 10.244.0.173
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@frontend-pod:/#
+exit
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ cat service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: first-service
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f service.yml
+service/first-service created
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get svc
+NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+first-service   ClusterIP   10.245.253.198   <none>        8080/TCP   5s
+kubernetes      ClusterIP   10.245.0.1       <none>        443/TCP    5d9h
+cherryniks@CherryNiks:~/k8s$ kubectl describe svc first-service
+Name:              first-service
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          <none>
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.245.253.198
+IPs:               10.245.253.198
+Port:              <unset>  8080/TCP
+TargetPort:        80/TCP
+Endpoints:         <none>
+Session Affinity:  None
+Events:            <none>
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ cat Endpoint.yml
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: first-service
+subsets:
+  - addresses:
+      - ip: 10.244.0.173
+    ports:
+      - port: 80
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f Endpoint.yml
+endpoints/first-service created
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get ep
+NAME            ENDPOINTS           AGE
+first-service   10.244.0.173:80     14s
+kubernetes      100.65.30.196:443   5d9h
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl describe svc first-service
+Name:              first-service
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          <none>
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.245.253.198
+IPs:               10.245.253.198
+Port:              <unset>  8080/TCP
+TargetPort:        80/TCP
+Endpoints:         10.244.0.173:80
+Session Affinity:  None
+Events:            <none>
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it frontend-pod -- bash
+root@frontend-pod:/# curl 10.245.253.198:80
+^C
+root@frontend-pod:/# curl 10.245.253.198:8080     <<<<8080 PORT of service >>>>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@frontend-pod:/#
+
+cherryniks@CherryNiks:~/k8s$ kubectl get svc
+NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+first-service   ClusterIP   10.245.253.198   <none>        8080/TCP   16m
+kubernetes      ClusterIP   10.245.0.1       <none>        443/TCP    5d9h
+cherryniks@CherryNiks:~/k8s$ kubectl delete svc first-service
+service "first-service" deleted
+cherryniks@CherryNiks:~/k8s$ kubectl get ep
+NAME         ENDPOINTS           AGE
+kubernetes   100.65.30.196:443   5d9h
+cherryniks@CherryNiks:~/k8s$ ### service automatially deleted eps
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+backend-pod-1   1/1     Running   0          26m
+backend-pod-2   1/1     Running   0          26m
+frontend-pod    1/1     Running   0          25m
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+backend-pod-1   1/1     Running   0          27m
+backend-pod-2   1/1     Running   0          27m
+frontend-pod    1/1     Running   0          26m
+cherryniks@CherryNiks:~/k8s$ kubectl delete pods --all
+pod "backend-pod-1" deleted
+pod "backend-pod-2" deleted
+pod "frontend-pod" deleted
+
+---
+
+
+cherryniks@CherryNiks:~/k8s$ cat demo-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+cherryniks@CherryNiks:~/k8s$ kubectl get deployments
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   3/3     3            3           2m30s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --show-labels
+NAME                                READY   STATUS    RESTARTS   AGE     LABELS
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          2m46s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          2m46s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          2m46s   app=nginx,pod-template-hash=6cfb64b7c5
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f demo-deployment-svc.yml
+service/svc-selector created
+
+cherryniks@CherryNiks:~/k8s$cat demo-deployment-svc.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-selector
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --show-labels
+NAME                                READY   STATUS    RESTARTS   AGE     LABELS
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          6m45s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          6m45s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          6m45s   app=nginx,pod-template-hash=6cfb64b7c5
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+NAME                                READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          6m54s   10.244.1.5     k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          6m54s   10.244.0.41    k8snodepool-brrfn   <none>           <none>
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          6m54s   10.244.0.227   k8snodepool-brrq9   <none>           <none>
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   3/3     3            3           7m4s
+cherryniks@CherryNiks:~/k8s$ kubectl get svc
+NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+kubernetes     ClusterIP   10.245.0.1       <none>        443/TCP   5d11h
+svc-selector   ClusterIP   10.245.235.234   <none>        80/TCP    5m36s
+cherryniks@CherryNiks:~/k8s$ kubectl describe svc svc-selector
+Name:              svc-selector
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          app=nginx
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.245.235.234
+IPs:               10.245.235.234
+Port:              <unset>  80/TCP
+TargetPort:        80/TCP
+Endpoints:         10.244.0.227:80,10.244.0.41:80,10.244.1.5:80
+Session Affinity:  None
+Events:            <none>
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl scale deployment/nginx-deployment --replicas=10
+deployment.apps/nginx-deployment scaled
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   10/10   10           10          8m33s
+cherryniks@CherryNiks:~/k8s$ kubectl describe svc svc-selector
+Name:              svc-selector
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          app=nginx
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.245.235.234
+IPs:               10.245.235.234
+Port:              <unset>  80/TCP
+TargetPort:        80/TCP
+Endpoints:         10.244.0.110:80,10.244.0.133:80,10.244.0.172:80 + 7 more...
+Session Affinity:  None
+Events:            <none>
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --show-labels
+NAME                                READY   STATUS    RESTARTS   AGE     LABELS
+nginx-deployment-6cfb64b7c5-2wccn   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-8kn98   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-b9kft   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-fmrxg   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          9m14s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-j9qpn   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          9m14s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-mfbtj   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          9m14s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-z47rt   1/1     Running   0          46s     app=nginx,pod-template-hash=6cfb64b7c5
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+
+NAME                                READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+nginx-deployment-6cfb64b7c5-2wccn   1/1     Running   0          57s     10.244.0.172   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-8kn98   1/1     Running   0          57s     10.244.1.69    k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-b9kft   1/1     Running   0          57s     10.244.1.111   k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-fmrxg   1/1     Running   0          57s     10.244.0.224   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          9m25s   10.244.1.5     k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-j9qpn   1/1     Running   0          57s     10.244.0.133   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          9m25s   10.244.0.41    k8snodepool-brrfn   <none>           <none>
+nginx-deployment-6cfb64b7c5-mfbtj   1/1     Running   0          57s     10.244.0.73    k8snodepool-brrfn   <none>           <none>
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          9m25s   10.244.0.227   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-z47rt   1/1     Running   0          57s     10.244.0.110   k8snodepool-brrfn   <none>           <none>
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get ep
+NAME           ENDPOINTS                                                     AGE
+kubernetes     100.65.30.196:443                                             5d11h
+svc-selector   10.244.0.110:80,10.244.0.133:80,10.244.0.172:80 + 7 more...   8m47s
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl describe ep svc-selector
+Name:         svc-selector
+Namespace:    default
+Labels:       <none>
+Annotations:  endpoints.kubernetes.io/last-change-trigger-time: 2024-08-11T16:39:04Z
+Subsets:
+  Addresses:          10.244.0.110,10.244.0.133,10.244.0.172,10.244.0.224,10.244.0.227,10.244.0.41,10.244.0.73,10.244.1.111,10.244.1.5,10.244.1.69
+  NotReadyAddresses:  <none>
+  Ports:
+    Name     Port  Protocol
+    ----     ----  --------
+    <unset>  80    TCP
+
+Events:  <none>
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl run manual-pod --image=nginx
+pod/manual-pod created
+cherryniks@CherryNiks:~/k8s$ kubectl label pods manual-pod app=nginx
+pod/manual-pod labeled
+cherryniks@CherryNiks:~/k8s$ kubectl get pods --show-labels
+NAME                                READY   STATUS    RESTARTS   AGE     LABELS
+manual-pod                          1/1     Running   0          86s     app=nginx,run=manual-pod
+nginx-deployment-6cfb64b7c5-2wccn   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-8kn98   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-b9kft   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-fmrxg   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          14m     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-j9qpn   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          14m     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-mfbtj   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          14m     app=nginx,pod-template-hash=6cfb64b7c5
+nginx-deployment-6cfb64b7c5-z47rt   1/1     Running   0          5m38s   app=nginx,pod-template-hash=6cfb64b7c5
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl describe ep svc-selector
+Name:         svc-selector
+Namespace:    default
+Labels:       <none>
+Annotations:  endpoints.kubernetes.io/last-change-trigger-time: 2024-08-11T16:43:15Z
+Subsets:
+  Addresses:          10.244.0.110,10.244.0.133,10.244.0.172,10.244.0.203,10.244.0.224,10.244.0.227,10.244.0.41,10.244.0.73,10.244.1.111,10.244.1.5,10.244.1.69
+  NotReadyAddresses:  <none>
+  Ports:
+    Name     Port  Protocol
+    ----     ----  --------
+    <unset>  80    TCP
+
+Events:  <none>
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+NAME                                READY   STATUS    RESTARTS   AGE     IP             NODE                NOMINATED NODE   READINESS GATES
+manual-pod                          1/1     Running   0          2m4s    10.244.0.203   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-2wccn   1/1     Running   0          6m16s   10.244.0.172   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-8kn98   1/1     Running   0          6m16s   10.244.1.69    k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-b9kft   1/1     Running   0          6m16s   10.244.1.111   k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-fmrxg   1/1     Running   0          6m16s   10.244.0.224   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-fz7wf   1/1     Running   0          14m     10.244.1.5     k8snodepool-brrf3   <none>           <none>
+nginx-deployment-6cfb64b7c5-j9qpn   1/1     Running   0          6m16s   10.244.0.133   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-k4952   1/1     Running   0          14m     10.244.0.41    k8snodepool-brrfn   <none>           <none>
+nginx-deployment-6cfb64b7c5-mfbtj   1/1     Running   0          6m16s   10.244.0.73    k8snodepool-brrfn   <none>           <none>
+nginx-deployment-6cfb64b7c5-tzs94   1/1     Running   0          14m     10.244.0.227   k8snodepool-brrq9   <none>           <none>
+nginx-deployment-6cfb64b7c5-z47rt   1/1     Running   0          6m16s   10.244.0.110   k8snodepool-brrfn   <none>           <none>
+cherryniks@CherryNiks:~/k8s$
+
+<<< 10.244.0.203  is added in EPs >>>
+
+	
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   10/10   10           10          16m
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl delete -f demo-deployment.yml
+deployment.apps "nginx-deployment" deleted
+cherryniks@CherryNiks:~/k8s$ kubectl get deploy
+No resources found in default namespace.
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl delete -f demo-deployment-svc.yml
+service "svc-selector" deleted
+cherryniks@CherryNiks:~/k8s$ kubectl delete pod manual-pod
+pod "manual-pod" deleted
+cherryniks@CherryNiks:~/k8s$
+---
+
+
+
+
+cherryniks@CherryNiks:~/k8s$ cat nodeport.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nodeport
+spec:
+  selector:
+    type: publicpod
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+cherryniks@CherryNiks:~/k8s$ kubectl get svc
+NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes     ClusterIP   10.245.0.1      <none>        443/TCP        5d22h
+svc-nodeport   NodePort    10.245.160.24   <none>        80:31908/TCP   36m
+cherryniks@CherryNiks:~/k8s$ kubectl get nodes -o wide
+NAME                STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP      OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+k8snodepool-brrf3   Ready    <none>   5d22h   v1.30.2   10.122.0.2    159.65.157.155   Debian GNU/Linux 12 (bookworm)   6.1.0-22-amd64   containerd://1.6.31
+k8snodepool-brrfn   Ready    <none>   5d22h   v1.30.2   10.122.0.4    159.65.157.172   Debian GNU/Linux 12 (bookworm)   6.1.0-22-amd64   containerd://1.6.31
+k8snodepool-brrq9   Ready    <none>   5d22h   v1.30.2   10.122.0.3    159.65.157.156   Debian GNU/Linux 12 (bookworm)   6.1.0-22-amd64   containerd://1.6.31
+cherryniks@CherryNiks:~/k8s$ curl 159.65.157.155:31908
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ cat livenessprobe.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness
+spec:
+  containers:
+  - image: ubuntu
+    name: liveness
+    tty: true
+    livenessProbe:
+      exec:
+        command:
+        - service
+        - nginx
+        - status
+      initialDelaySeconds: 20
+      periodSeconds: 5
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f livenessprobe.yml
+pod/liveness created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME           READY   STATUS    RESTARTS   AGE
+liveness       1/1     Running   0          6s
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it liveness -- bash
+root@liveness:/# service nginx status
+nginx: unrecognized service
+root@liveness:/# echo $?
+1
+root@liveness:/#
+exit
+cherryniks@CherryNiks:
+cherryniks@CherryNiks:~/k8s$ kubectl describe pod liveness
+Name:             liveness
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             k8snodepool-brrq9/10.122.0.3
+Start Time:       Mon, 12 Aug 2024 04:18:59 +0000
+Labels:           <none>
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.199
+IPs:
+  IP:  10.244.0.199
+Containers:
+  liveness:
+    Container ID:   containerd://4a457c40fb8f24540925044f609ba4acec266a1ed22138e719b95240b22c6b17
+    Image:          ubuntu
+    Image ID:       docker.io/library/ubuntu@sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    137
+      Started:      Mon, 12 Aug 2024 04:26:56 +0000
+      Finished:     Mon, 12 Aug 2024 04:28:00 +0000
+    Ready:          False
+    Restart Count:  6
+    Liveness:       exec [service nginx status] delay=20s timeout=1s period=5s #success=1 #failure=3
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-bkr4g (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  kube-api-access-bkr4g:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                    From               Message
+  ----     ------     ----                   ----               -------
+  Normal   Scheduled  9m26s                  default-scheduler  Successfully assigned default/liveness to k8snodepool-brrq9
+  Normal   Pulled     9m23s                  kubelet            Successfully pulled image "ubuntu" in 1.641s (1.641s including waiting). Image size: 29709006 bytes.
+  Normal   Pulled     8m18s                  kubelet            Successfully pulled image "ubuntu" in 1.743s (1.743s including waiting). Image size: 29709006 bytes.
+  Normal   Created    7m13s (x3 over 9m23s)  kubelet            Created container liveness
+  Normal   Started    7m13s (x3 over 9m23s)  kubelet            Started container liveness
+  Normal   Pulled     7m13s                  kubelet            Successfully pulled image "ubuntu" in 1.616s (1.616s including waiting). Image size: 29709006 bytes.
+  Warning  Unhealthy  6m40s (x9 over 9m)     kubelet            Liveness probe failed: nginx: unrecognized service
+  Normal   Killing    6m40s (x3 over 8m50s)  kubelet            Container liveness failed liveness probe, will be restarted
+  Normal   Pulling    4m (x6 over 9m25s)     kubelet            Pulling image "ubuntu"
+cherryniks@CherryNiks:~/k8s$
+
+--
+
+cherryniks@CherryNiks:~/k8s$ cat readinessprobe.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness
+spec:
+  containers:
+  - image: ubuntu
+    name: readiness
+    tty: true
+    readinessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f readinessprobe.yml
+pod/readiness created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   0/1     Running   0          4s
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it readiness ls /tmp/healthy
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+ls: cannot access '/tmp/healthy': No such file or directory
+command terminated with exit code 2
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it readiness --  ls /tmp/healthy
+ls: cannot access '/tmp/healthy': No such file or directory
+command terminated with exit code 2
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it readiness --  touch /tmp/healthy
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   0/1     Running   0          53s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   1/1     Running   0          63s
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it readiness --  ls /tmp/healthy
+/tmp/healthy
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   1/1     Running   0          79s
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it readiness --  rm /tmp/healthy
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it readiness --  ls /tmp/healthy
+ls: cannot access '/tmp/healthy': No such file or directory
+command terminated with exit code 2
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   1/1     Running   0          92s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   1/1     Running   0          95s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+readiness   0/1     Running   0          96s
+cherryniks@CherryNiks:~/k8s$
+
+
+---
+
+cherryniks@CherryNiks:~/k8s$ cat  daemonset.yml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: first-daemonset
+spec:
+  selector:
+    matchLabels:
+      name: damnset-all-pods
+  template:
+    metadata:
+      labels:
+        name: damnset-all-pods
+    spec:
+      containers:
+      - image: nginx
+        name: daemnset-pods
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f daemonset.yml
+daemonset.apps/first-daemonset created
+cherryniks@CherryNiks:~/k8s$ kubectl get nodes
+NAME                STATUS   ROLES    AGE   VERSION
+k8snodepool-brrf3   Ready    <none>   6d    v1.30.2
+k8snodepool-brrfn   Ready    <none>   6d    v1.30.2
+k8snodepool-brrq9   Ready    <none>   6d    v1.30.2
+cherryniks@CherryNiks:~/k8s$kubectl get pods -o wide
+NAME                    READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES
+first-daemonset-dptmg   1/1     Running   0          83s   10.244.1.109   k8snodepool-brrf3   <none>           <none>
+first-daemonset-hdvmd   1/1     Running   0          83s   10.244.0.11    k8snodepool-brrfn   <none>           <none>
+first-daemonset-sbtgg   1/1     Running   0          83s   10.244.0.181   k8snodepool-brrq9   <none>           <none>
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl get daemonsets
+NAME              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+first-daemonset   3         3         3       3            3           <none>          4m4s
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl describe daemonsets first-daemonset
+Name:           first-daemonset
+Selector:       name=damnset-all-pods
+Node-Selector:  <none>
+Labels:         <none>
+Annotations:    deprecated.daemonset.template.generation: 1
+Desired Number of Nodes Scheduled: 3
+Current Number of Nodes Scheduled: 3
+Number of Nodes Scheduled with Up-to-date Pods: 3
+Number of Nodes Scheduled with Available Pods: 3
+Number of Nodes Misscheduled: 0
+Pods Status:  3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  name=damnset-all-pods
+  Containers:
+   daemnset-pods:
+    Image:         nginx
+    Port:          <none>
+    Host Port:     <none>
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Events:
+  Type    Reason            Age    From                  Message
+  ----    ------            ----   ----                  -------
+  Normal  SuccessfulCreate  4m41s  daemonset-controller  Created pod: first-daemonset-sbtgg
+  Normal  SuccessfulCreate  4m41s  daemonset-controller  Created pod: first-daemonset-hdvmd
+  Normal  SuccessfulCreate  4m41s  daemonset-controller  Created pod: first-daemonset-dptmg
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+cherryniks@CherryNiks:~/k8s$ cat tolerations.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tolerate-deployment
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - image: nginx:1.26
+        name: nginxcnt
+      tolerations:
+      - key: "key1"
+        operator: "Exists"
+        effect: "NoSchedule"
+
+cherryniks@CherryNiks:~/k8s$
+
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl taint nodes k8snodepool-brrfn key1=value1:NoSchedule
+node/k8snodepool-brrfn tainted
+cherryniks@CherryNiks:~/k8s$ kubectl get nodes
+NAME                STATUS   ROLES    AGE    VERSION
+k8snodepool-brrf3   Ready    <none>   6d4h   v1.30.2
+k8snodepool-brrfn   Ready    <none>   6d4h   v1.30.2
+k8snodepool-brrq9   Ready    <none>   6d4h   v1.30.2
+cherryniks@CherryNiks:~/k8s$ kubectl taint nodes k8snodepool-brrfn key1=value1:NoSchedule
+node/k8snodepool-brrfn tainted
+cherryniks@CherryNiks:~/k8s$ kubectl describe nodes | grep -i taint
+Taints:             <none>
+Taints:             key1=value1:NoSchedule
+Taints:             <none>
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f tolerations.yml
+deployment.apps/tolerate-deployment created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+tolerate-deployment-79b487fccb-2cvw2   1/1     Running   0          2s
+tolerate-deployment-79b487fccb-hw6v5   1/1     Running   0          2s
+tolerate-deployment-79b487fccb-pn4cg   1/1     Running   0          2s
+tolerate-deployment-79b487fccb-w76xs   1/1     Running   0          2s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES
+tolerate-deployment-79b487fccb-2cvw2   1/1     Running   0          9s    10.244.0.156   k8snodepool-brrq9   <none>           <none>
+tolerate-deployment-79b487fccb-hw6v5   1/1     Running   0          9s    10.244.0.215   k8snodepool-brrq9   <none>           <none>
+tolerate-deployment-79b487fccb-pn4cg   1/1     Running   0          9s    10.244.1.116   k8snodepool-brrf3   <none>           <none>
+tolerate-deployment-79b487fccb-w76xs   1/1     Running   0          9s    10.244.0.106   k8snodepool-brrfn   <none>           <none>
+cherryniks@CherryNiks:~/k8s$
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl taint nodes k8snodepool-brrfn key1=value1:NoSchedule-
+node/k8snodepool-brrfn untainted
+cherryniks@CherryNiks:~/k8s$ kubectl describe nodes | grep -i taint
+Taints:             <none>
+Taints:             <none>
+Taints:             <none>
+cherryniks@CherryNiks:~/k8s$
+
+-----
+
+
+
+
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f requests-limits.yml
+pod/reqlmt-pod created
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+reqlmt-pod   0/1     Pending   0          40s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+reqlmt-pod   0/1     Pending   0          43s
+cherryniks@CherryNiks:~/k8s$
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+NAME         READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES
+reqlmt-pod   0/1     Pending   0          48s   <none>   <none>   <none>           <none>
+cherryniks@CherryNiks:~/k8s$ kubectl logs reqlmt-pod
+cherryniks@CherryNiks:~/k8s$ kubectl get events
+LAST SEEN   TYPE      REASON              OBJECT           MESSAGE
+82s         Warning   FailedScheduling    pod/reqlmt-pod   0/3 nodes are available: 3 Insufficient cpu. preemption: 0/3 nodes are available: 3 No preemption victims found for incoming pod.
+51s         Normal    NotTriggerScaleUp   pod/reqlmt-pod   pod didn't trigger scale-up:
+cherryniks@CherryNiks:~/k8s$
+
+
+--
+
+cherryniks@CherryNiks:~/k8s$   cat requests-limits.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: reqlmt-pod
+spec:
+  containers:
+  - name: reqlmt-container
+    image: nginx
+    resources:
+      requests:
+        memory: "6Mi"
+        cpu: "0.1"
+      limits:
+        memory: "12Mi"
+        cpu: "0.2"
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f requests-limits.yml
+pod/reqlmt-pod created
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME         READY   STATUS              RESTARTS   AGE
+reqlmt-pod   0/1     ContainerCreating   0          2s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+reqlmt-pod   1/1     Running   0          6s
+cherryniks@CherryNiks:~/k8s$ kubectl get pods -o wide
+NAME         READY   STATUS    RESTARTS   AGE   IP             NODE                NOMINATED NODE   READINESS GATES
+reqlmt-pod   1/1     Running   0          14s   10.244.0.143   k8snodepool-brrq9   <none>           <none>
+cherryniks@CherryNiks:~/k8s$ kubectl describe node k8snodepool-brrq9
+Name:               k8snodepool-brrq9
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=s-1vcpu-2gb
+                    beta.kubernetes.io/os=linux
+                    doks.digitalocean.com/managed=true
+                    doks.digitalocean.com/node-id=dde1a08a-defb-433d-81fe-73270f2e8930
+                    doks.digitalocean.com/node-pool=k8snodepool
+                    doks.digitalocean.com/node-pool-id=f8d24dc3-02e3-405f-8134-8710da13b19b
+                    doks.digitalocean.com/version=1.30.2-do.0
+                    failure-domain.beta.kubernetes.io/region=blr1
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=k8snodepool-brrq9
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=s-1vcpu-2gb
+                    region=blr1
+                    topology.kubernetes.io/region=blr1
+Annotations:        alpha.kubernetes.io/provided-node-ip: 10.122.0.3
+                    csi.volume.kubernetes.io/nodeid: {"dobs.csi.digitalocean.com":"437439539"}
+                    network.cilium.io/ipv4-cilium-host: 10.244.0.204
+                    network.cilium.io/ipv4-health-ip: 10.244.0.198
+                    network.cilium.io/ipv4-pod-cidr: 10.244.0.128/25
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Tue, 06 Aug 2024 05:37:10 +0000
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  k8snodepool-brrq9
+  AcquireTime:     <unset>
+  RenewTime:       Mon, 12 Aug 2024 15:45:34 +0000
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Tue, 06 Aug 2024 05:37:37 +0000   Tue, 06 Aug 2024 05:37:37 +0000   CiliumIsUp                   Cilium is running on this node
+  MemoryPressure       False   Mon, 12 Aug 2024 15:45:24 +0000   Tue, 06 Aug 2024 05:37:10 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Mon, 12 Aug 2024 15:45:24 +0000   Tue, 06 Aug 2024 05:37:10 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Mon, 12 Aug 2024 15:45:24 +0000   Tue, 06 Aug 2024 05:37:10 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Mon, 12 Aug 2024 15:45:24 +0000   Tue, 06 Aug 2024 05:37:32 +0000   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  10.122.0.3
+  Hostname:    k8snodepool-brrq9
+  ExternalIP:  159.65.157.156
+Capacity:
+  cpu:                1
+  ephemeral-storage:  51432064Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             2014412Ki
+  pods:               110
+Allocatable:
+  cpu:                900m
+  ephemeral-storage:  47399790104
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             1574Mi
+  pods:               110
+System Info:
+  Machine ID:                 fc9b71bbd5964bad99e73199da4710ab
+  System UUID:                fc9b71bb-d596-4bad-99e7-3199da4710ab
+  Boot ID:                    5bdc21d9-7720-4409-8cbb-16aa77cb92b2
+  Kernel Version:             6.1.0-22-amd64
+  OS Image:                   Debian GNU/Linux 12 (bookworm)
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://1.6.31
+  Kubelet Version:            v1.30.2
+  Kube-Proxy Version:         v1.30.2
+ProviderID:                   digitalocean://437439539
+Non-terminated Pods:          (8 in total)
+  Namespace                   Name                          CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                          ------------  ----------  ---------------  -------------  ---
+  default                     reqlmt-pod                    100m (11%)    200m (22%)  6Mi (0%)         12Mi (0%)      26s
+  kube-system                 cilium-9fwmh                  300m (33%)    0 (0%)      300Mi (19%)      0 (0%)         6d10h
+  kube-system                 cpc-bridge-proxy-qxr6t        100m (11%)    0 (0%)      75Mi (4%)        0 (0%)         6d10h
+  kube-system                 csi-do-node-94fp5             0 (0%)        0 (0%)      0 (0%)           0 (0%)         6d10h
+  kube-system                 do-node-agent-dlqkg           102m (11%)    0 (0%)      80Mi (5%)        300Mi (19%)    6d10h
+  kube-system                 hubble-ui-86cc69bddc-286wt    0 (0%)        0 (0%)      0 (0%)           0 (0%)         6d10h
+  kube-system                 konnectivity-agent-r4zcb      0 (0%)        0 (0%)      0 (0%)           0 (0%)         6d10h
+  kube-system                 kube-proxy-xjn6x              0 (0%)        0 (0%)      125Mi (7%)       0 (0%)         6d10h
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests     Limits
+  --------           --------     ------
+  cpu                602m (66%)   200m (22%)
+  memory             586Mi (37%)  312Mi (19%)
+  ephemeral-storage  0 (0%)       0 (0%)
+  hugepages-1Gi      0 (0%)       0 (0%)
+  hugepages-2Mi      0 (0%)       0 (0%)
+Events:              <none>
+cherryniks@CherryNiks:~/k8s$
+
+---
+
+NW Polices
+
+cherryniks@CherryNiks:~/k8s$ kubectl run -it pod01 --image=busybox
+If you don't see a command prompt, try pressing enter.
+/ #
+/ #
+/ # ifconfig
+eth0      Link encap:Ethernet  HWaddr 4A:65:FC:EF:50:7C
+          inet addr:10.244.0.107  Bcast:0.0.0.0  Mask:255.255.255.255
+          inet6 addr: fe80::4865:fcff:feef:507c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:14 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:1217 (1.1 KiB)  TX bytes:726 (726.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ #
+Session ended, resume using 'kubectl attach pod01 -c pod01 -i -t' command when the pod is running
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~$ kubectl run -it pod02 --image=busybox
+If you don't see a command prompt, try pressing enter.
+/ #
+/ #
+/ # ping 10.244.0.107
+PING 10.244.0.107 (10.244.0.107): 56 data bytes
+64 bytes from 10.244.0.107: seq=0 ttl=60 time=3.462 ms
+64 bytes from 10.244.0.107: seq=1 ttl=60 time=2.034 ms
+^C
+--- 10.244.0.107 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 2.034/2.748/3.462 ms
+
+apply ingress policy (block incoming to pod )
+
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f netpol-deny-pod.yml
+networkpolicy.networking.k8s.io/default-deny-pod created
+cherryniks@CherryNiks:~/k8s$ cat netpol-deny-pod.yml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-pod
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: pod01  <<< label of pod1 == > which blocks the incoming connections ( kubectl describe pod1 and search for label)
+  policyTypes:
+    - Ingress
+cherryniks@CherryNiks:~/k8s$
+
+chek @ pod2
+cherryniks@CherryNiks:~$ kubectl run -it pod02 --image=busybox
+If you don't see a command prompt, try pressing enter.
+/ #
+/ #
+/ # ping 10.244.0.107
+PING 10.244.0.107 (10.244.0.107): 56 data bytes
+64 bytes from 10.244.0.107: seq=0 ttl=60 time=3.462 ms
+64 bytes from 10.244.0.107: seq=1 ttl=60 time=2.034 ms
+^C
+--- 10.244.0.107 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 2.034/2.748/3.462 ms
+/ #
+/ # ping 10.244.0.107
+PING 10.244.0.107 (10.244.0.107): 56 data bytes
+^C
+--- 10.244.0.107 ping statistics ---
+5 packets transmitted, 0 packets received, 100% packet loss
+/ #
+
+
+
+>>> Now disable outgoing traffic
+before block:
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it pod01 sh
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+/ # ifconfig
+eth0      Link encap:Ethernet  HWaddr 4A:65:FC:EF:50:7C
+          inet addr:10.244.0.107  Bcast:0.0.0.0  Mask:255.255.255.255
+          inet6 addr: fe80::4865:fcff:feef:507c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:21 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:16 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:1735 (1.6 KiB)  TX bytes:1244 (1.2 KiB)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ping google.com
+PING google.com (142.250.195.110): 56 data bytes
+64 bytes from 142.250.195.110: seq=0 ttl=114 time=9.300 ms
+64 bytes from 142.250.195.110: seq=1 ttl=114 time=8.045 ms
+64 bytes from 142.250.195.110: seq=2 ttl=114 time=7.586 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 7.586/8.310/9.300 ms
+/ #
+
+
+
+Disable outgoing
+cherryniks@CherryNiks:~/k8s$ cat netpol-deny-pod.yml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-pod
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: pod01
+  policyTypes:
+    - Ingress
+    - Egress
+cherryniks@CherryNiks:~/k8s$ kubectl apply -f netpol-deny-pod.yml
+networkpolicy.networking.k8s.io/default-deny-pod configured
+cherryniks@CherryNiks:~/k8s$ date
+Mon Aug 12 17:47:13 UTC 2024
+cherryniks@CherryNiks:~/k8s$
+
+cherryniks@CherryNiks:~/k8s$ kubectl exec -it pod01 sh
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+/ # ifconfig
+eth0      Link encap:Ethernet  HWaddr 4A:65:FC:EF:50:7C
+          inet addr:10.244.0.107  Bcast:0.0.0.0  Mask:255.255.255.255
+          inet6 addr: fe80::4865:fcff:feef:507c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:21 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:16 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:1735 (1.6 KiB)  TX bytes:1244 (1.2 KiB)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ping google.com
+PING google.com (142.250.195.110): 56 data bytes
+64 bytes from 142.250.195.110: seq=0 ttl=114 time=9.300 ms
+64 bytes from 142.250.195.110: seq=1 ttl=114 time=8.045 ms
+64 bytes from 142.250.195.110: seq=2 ttl=114 time=7.586 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 7.586/8.310/9.300 ms
+/ # ping google.com
+PING google.com (142.250.195.110): 56 data bytes
+64 bytes from 142.250.195.110: seq=0 ttl=114 time=9.294 ms
+64 bytes from 142.250.195.110: seq=1 ttl=114 time=8.165 ms
+64 bytes from 142.250.195.110: seq=2 ttl=114 time=7.566 ms
+64 bytes from 142.250.195.110: seq=3 ttl=114 time=7.887 ms
+64 bytes from 142.250.195.110: seq=4 ttl=114 time=7.492 ms
+64 bytes from 142.250.195.110: seq=5 ttl=114 time=7.534 ms
+64 bytes from 142.250.195.110: seq=6 ttl=114 time=7.676 ms
+64 bytes from 142.250.195.110: seq=7 ttl=114 time=7.793 ms
+^C
+--- google.com ping statistics ---
+18 packets transmitted, 8 packets received, 55% packet loss
+round-trip min/avg/max = 7.492/7.925/9.294 ms
+/ # date
+Mon Aug 12 17:47:18 UTC 2024
+/ #
+
+--------------
+
+
+cherryniks@CherryNiks:~/cka24$ k run nginx --image=nginx --port=80 --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+cherryniks@CherryNiks:~/cka24$
+
+
+
+
+cherryniks@CherryNiks:~/cka24$ k run nginx --image=nginx --port=80 --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+cherryniks@CherryNiks:~/cka24$
+
+
+cherryniks@CherryNiks:~/cka24$ k run nginx --image=nginx --port=80 --dry-run=server -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2024-08-14T03:43:54Z"
+  labels:
+    run: nginx
+  name: nginx
+  namespace: default
+  uid: 6bce0911-af20-4431-8b2d-e9f754a0fcde
+spec:
+  containers:
+  - image: nginx
+    imagePullPolicy: Always
+    name: nginx
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dn9v7
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-dn9v7
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  phase: Pending
+  qosClass: BestEffort
+cherryniks@CherryNiks:~/cka24$
+
+cherryniks@CherryNiks:~/cka24$ k get pods
+No resources found in default namespace.
+cherryniks@CherryNiks:~/cka24$ k run nginx --image=nginx --port=80
+pod/nginx created
+cherryniks@CherryNiks:~/cka24$ k run nginx --image=nginx --port=80 --dry-run=server -o yaml
+Error from server (AlreadyExists): pods "nginx" already exists
+cherryniks@CherryNiks:~/cka24$
+
+---
+
+Static Pods:
+
+[root@worker1 ~]# systemctl status kubelet
+● kubelet.service - kubelet: The Kubernetes Node Agent
+     Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; preset: disabled)
+    Drop-In: /usr/lib/systemd/system/kubelet.service.d
+             └─10-kubeadm.conf
+     Active: active (running) since Tue 2024-08-13 20:50:14 IST; 13h ago
+       Docs: https://kubernetes.io/docs/
+   Main PID: 1221 (kubelet)
+      Tasks: 12 (limit: 10755)
+     Memory: 87.4M
+        CPU: 4min 36.428s
+     CGroup: /system.slice/kubelet.service
+             └─1221 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/>
+
+Aug 14 10:22:43 worker1 kubelet[1221]: E0814 10:22:43.847361    1221 kubelet_node_status.go:544] "Error updating node status, will retry" err="error getting node \"wor>
+Aug 14 10:22:43 worker1 kubelet[1221]: E0814 10:22:43.849658    1221 kubelet_node_status.go:531] "Unable to update node status" err="update node status exceeds retry c>
+Aug 14 10:22:50 worker1 kubelet[1221]: E0814 10:22:50.620500    1221 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://192.168.140.128:>
+Aug 14 10:23:04 worker1 kubelet[1221]: E0814 10:23:04.226554    1221 kubelet_node_status.go:544] "Error updating node status, will retry" err="error getting node \"wor>
+Aug 14 10:23:05 worker1 kubelet[1221]: E0814 10:23:05.743856    1221 reflector.go:147] object-"calico-system"/"node-certs": Failed to watch *v1.Secret: unknown (get se>
+Aug 14 10:23:05 worker1 kubelet[1221]: E0814 10:23:05.751480    1221 reflector.go:147] object-"default"/"kube-root-ca.crt": Failed to watch *v1.ConfigMap: unknown (get>
+Aug 14 10:23:05 worker1 kubelet[1221]: E0814 10:23:05.780537    1221 reflector.go:147] object-"kube-system"/"kube-root-ca.crt": Failed to watch *v1.ConfigMap: unknown >
+Aug 14 10:23:05 worker1 kubelet[1221]: E0814 10:23:05.780819    1221 reflector.go:147] object-"kube-system"/"kube-proxy": Failed to watch *v1.ConfigMap: unknown (get c>
+Aug 14 10:23:05 worker1 kubelet[1221]: E0814 10:23:05.781530    1221 reflector.go:147] object-"calico-system"/"tigera-ca-bundle": Failed to watch *v1.ConfigMap: unknow>
+Aug 14 10:23:05 worker1 kubelet[1221]: E0814 10:23:05.781706    1221 reflector.go:147] object-"calico-system"/"kube-root-ca.crt": Failed to watch *v1.ConfigMap: unknow>
+[root@worker1 ~]# cd /usr/lib/systemd/system/kubelet.service.d
+[root@worker1 kubelet.service.d]# cat 10-kubeadm.conf
+# Note: This dropin only works with kubeadm and kubelet v1.11+
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
+# This is a file that "kubeadm init" and "kubeadm join" generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically
+EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
+# This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use
+# the .NodeRegistration.KubeletExtraArgs object in the configuration files instead. KUBELET_EXTRA_ARGS should be sourced from this file.
+EnvironmentFile=-/etc/sysconfig/kubelet
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
+[root@worker1 kubelet.service.d]# cat /etc/sysconfig/kubelet
+KUBELET_EXTRA_ARGS=
+[root@worker1 kubelet.service.d]#
+
+[root@worker1 manifests]# cat /var/lib/kubelet/config.yaml | grep -i static
+staticPodPath: /etc/kubernetes/manifests
+[root@worker1 manifests]#
+
+[root@worker1 manifests]# vi static-web.yaml
+[root@worker1 manifests]#  cat static-web.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-pod
+spec:
+  containers:
+  - image: nginx
+    name: static-podc
+[root@worker1 manifests]#
+
+go to master and check
+[root@master ~]# k get pods
+NAME                 READY   STATUS    RESTARTS   AGE
+nginx                1/1     Running   0          85m
+static-pod-worker1   1/1     Running   0          21s
+[root@master ~]#
+
+delete file @ worker1 to delete static pod
+
+[root@worker1 manifests]# ls -ltr
+total 4
+-rw-r--r--. 1 root root 113 Aug 14 10:40 static-web.yaml
+[root@worker1 manifests]# rm static-web.yaml
+rm: remove regular file 'static-web.yaml'? y
+[root@worker1 manifests]#
+
+
+[root@master ~]# k get pods
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          92m
+[root@master ~]#
+

@@ -1,0 +1,146 @@
+docker run -d --hostname niks --name cherry --restart unless-stopped -P --network bridge nginx:latest
+- docker run -dt --name tmp --health-cmd "curl -f http://localhost" busybox sh
+
+
+
+
+docker start $(docker ps -a -q)
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker rm $(docker ps -a -q) -f
+
+
+docker container ls -aq 
+docker container stop $(docker container ls -aq)
+docker container rm $(docker container ls -aq)
+docker container stop $(docker container ls -aq) && docker system prune -af --volumes
+
+
+docker container prune
+docker image prune
+docker volume prune
+docker network prune
+
+docker container ls
+docker image ls
+docker volume ls
+docker network ls
+docker info
+
+
+docker inspect --size mycontainer
+
+docker network create --subnet 192.0.2.0/24 my-net
+docker run -itd --network=my-net --ip=192.0.2.69 busybox
+
+
+docker network create --subnet 192.0.2.0/24 my-net1
+docker network create --subnet 192.0.3.0/24 my-net2
+docker run -itd --network=my-net1 --network=my-net2 busybox
+
+docker network create --subnet 192.0.2.0/24 my-net1
+docker network create --subnet 192.0.3.0/24 my-net2
+docker run -itd --network=name=my-net1,ip=192.0.2.42 --network=name=my-net2,ip=192.0.3.42 busybox
+
+docker run --volumes-from 777f7dc92da7 --volumes-from ba8c0c54f0f2:ro -i -t ubuntu pwd
+
+
+
+docker ps -a -f status=exited
+docker rm $(docker ps -a -f status=exited -q)
+docker ps -a | grep "pattern" | awk '{print $1}' | xargs docker rm
+
+docker image prune -a --filter "until=24h"
+docker image prune -a
+docker history <image>
+
+docker search nginx
+docker search nginx --limit 5
+docker search nginx --filter="is-official=true"
+
+#move containers (export/import)
+docker export myubuntu1 > myubuntuctr1.tar
+cat myubuntuctr1.tar | docker import - newubuntu
+
+
+#move images (save/load)
+docker save <image> > image.tar
+docker load < image>.tar
+docker image ls
+
+docker swarm
+docker node ls
+docker node update --avaialbility drain swarm03
+docker node update --avaialbility active swarm03
+
+Inspecting a Service
+docker service inspect demotroubleshoot
+docker service inspect demotroubleshoot --pretty
+Inspecting a Node
+docker node inspect swarm01 
+docker node inspect swarm01 -pretty
+
+
+docker volume ls
+docker volume create nani
+docker volume ls
+docker volume inspect nani
+docker volume rm nani
+docker run -d --name cnt1 -v nanivol:/tmp nginx:latest
+
+
+docker run -d --name nani -p 80:80 -v nanivol:/tmp -l type=prod --network secure-network --restart always nginx:latest
+docker container inspect 7734
+docker cp <filename> container_id:<path to copy>
+docker cp nani:/etc/nginx/conf.d/default.conf ./default.conf
+
+docker ps -a --no-trunc
+docker stats <cntid>
+
+
+
+docker run -d --name nginx -p 80:80 nginx
+netstat -ntlp # check for port 80 listening
+docker stop <1bed>
+netstat -ntlp # check for port 80 listening
+
+
+
+docker exec -it 1b df -h
+
+## MW Patching
+docker run -d --name testingrestartpolicy --restart unless-stopped nginx
+
+
+#force deletion of container
+docker rm 5e -f
+
+# Disk usage of docker components
+docker system df
+docker system df -v     ==> To get details
+
+# --rm to remove after container exists
+docker container run -dt --rm --name testcontainer1 busybox ping -c10 google.com
+
+# None network type contains only loop interface
+docker run -d --name nonenetwork --network none nginx
+
+#Publish hostport to container without/won't specify
+docker run -d --name webcnt nginx  ##without host port specify, can't connect 
+docker run -d --name webcnt1 -p 80:80 nginx ##specify hostport 80
+docker run -d --name webcnt2 -P nginx  ##Random host port assigned 
+
+# Add hostname to container
+docker run -d --hostname niks --name cherry nginx
+
+
+docker run -d --hostname niks --name cherry --restart unless-stopped -P --network bridge nginx:latest
+docker run -d --hostname niks --rm --name cherry --restart unless-stopped -P --network bridge nginx:latest ==> failed
+docker: Conflicting options: --restart and --rm.
+right command: docker run -d --hostname niks --rm --name cherry  -P --network bridge nginx:latest
+
+
+
+By Default - Docker swarm deploys on the same node that is running
+TO deploy resouces across all nodes - use docker stack  ( on docker swarm cluster)
+
